@@ -20,6 +20,7 @@ html { color-scheme: light; scroll-behavior: smooth; font-size: 106.25%; }
 .wp-content h3 { font-size: 1.25rem; }
 .wp-content a { color: #047857; text-decoration: underline; text-underline-offset: 3px; }
 .wp-content img, .wp-content iframe, .wp-content video { max-width: 100%; height: auto; border-radius: 0.75rem; }
+.wp-content iframe { width: 100%; aspect-ratio: 16 / 9; }
 .wp-content ul { list-style: disc; padding-left: 1.5rem; }
 .wp-content ol { list-style: decimal; padding-left: 1.5rem; }
 .wp-content blockquote { border-left: 4px solid #047857; padding-left: 1rem; color: #404040; }

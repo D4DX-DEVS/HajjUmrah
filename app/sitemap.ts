@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE, allCategories, allPosts, authors, pageCount, postHref, postsIn } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const u = (p: string, lastModified?: string) => ({ url: SITE + p, lastModified });
+  const u = (p: string, lastModified?: string) => ({ url: SITE + encodeURI(p), lastModified });
   return [
     u("/"), u("/videos"), u("/about"), u("/contact"), u("/privacy-policy"),
     ...allCategories.flatMap((c) => [

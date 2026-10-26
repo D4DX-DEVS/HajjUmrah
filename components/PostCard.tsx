@@ -13,7 +13,7 @@ export default function PostCard({ post, lead, wide }: { post: Post; lead?: bool
         className={`relative block overflow-hidden rounded-xl bg-emerald-50 ${lead ? "aspect-video" : "aspect-[16/10]"} ${wide ? "lg:w-1/2 lg:shrink-0" : ""}`}
       >
         {post.image && (
-          <Image src={post.image} alt="" fill sizes="(min-width:1024px) 600px, (min-width:640px) 50vw, 100vw" className="object-cover transition duration-300 group-hover:scale-105" />
+          <Image src={post.image} alt="" fill sizes={lead ? "(min-width:1024px) 640px, 100vw" : "(min-width:1024px) 360px, (min-width:640px) 50vw, 100vw"} className="object-cover transition duration-300 group-hover:scale-105" />
         )}
       </Link>
       <div className="mt-3 flex flex-1 flex-col gap-1.5">

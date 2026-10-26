@@ -11,7 +11,7 @@ export default function CategoryList({ category, page }: { category: string; pag
   if (!cat || !Number.isInteger(page) || page < 1 || page > total) notFound();
   return (
     <>
-      <PageTitle sub={`${posts.length} posts`}>{cat.name}</PageTitle>
+      <PageTitle sub={`${posts.length} ${posts.length === 1 ? "post" : "posts"}`}>{cat.name}</PageTitle>
       <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {slicePage(posts, page).map((p) => <PostCard key={p.id} post={p} />)}
       </div>

@@ -5,13 +5,17 @@ import videos from "@/content/videos.json";
 
 export type Post = (typeof posts)[number];
 
-export const allPosts = [...posts].sort((a, b) => b.date.localeCompare(a.date));
+// WP exported some slugs percent-encoded; Next hands route params over decoded, so store them decoded.
+const dec = (s: string) => {
+  try { return decodeURIComponent(s); } catch { return s; }
+};
+export const allPosts = posts.map((p) => ({ ...p, slug: dec(p.slug) })).sort((a, b) => b.date.localeCompare(a.date));
 export const allCategories = categories;
 export const allVideos = videos;
 export const getPage = (slug: string) => pages.find((p) => p.slug === slug);
 export const getCategory = (slug: string) => categories.find((c) => c.slug === slug);
 export const postsIn = (cat: string) => allPosts.filter((p) => p.categories.includes(cat));
-export const getPost = (cat: string, slug: string) => allPosts.find((p) => p.category === cat && p.slug === slug);
+export const getPost = (cat: string, slug: string) => allPosts.find((p) => p.category === cat && p.slug === dec(slug));
 export const authors = [...new Map(allPosts.map((p) => [p.author.slug, p.author])).values()];
 export const postsBy = (slug: string) => allPosts.filter((p) => p.author.slug === slug);
 export const postHref = (p: Post) => `/${p.category}/${p.slug}`;
