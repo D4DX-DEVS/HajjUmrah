@@ -1,0 +1,38 @@
+[
+ {
+  "id": 38,
+  "slug": "articles",
+  "name": "Articles",
+  "count": 39
+ },
+ {
+  "id": 39,
+  "slug": "fatwa",
+  "name": "Fatwa",
+  "count": 20
+ },
+ {
+  "id": 41,
+  "slug": "fiqh",
+  "name": "Fiqh",
+  "count": 50
+ },
+ {
+  "id": 37,
+  "slug": "hajj-umrah",
+  "name": "Hajj & Umrah",
+  "count": 76
+ },
+ {
+  "id": 40,
+  "slug": "history-culture",
+  "name": "History & Culture",
+  "count": 43
+ },
+ {
+  "id": 42,
+  "slug": "rituals",
+  "name": "Rituals",
+  "count": 17
+ }
+]
