@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import posts from "./content/posts.json";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -26,11 +25,13 @@ const nextConfig: NextConfig = {
       },
     },
   },
-  // Old WordPress URLs: /<slug>/ and /category/<cat>/ -> new structure.
+  // WordPress served categories at /category/<cat>/; post, tag and author URLs are unchanged.
   async redirects() {
     return [
       { source: "/category/:cat", destination: "/:cat", permanent: true },
-      ...posts.map((p) => ({ source: `/${p.slug}`, destination: `/${p.category}/${p.slug}`, permanent: true })),
+      { source: "/category/:cat/page/:n", destination: "/:cat/page/:n", permanent: true },
+      // video-plugin utility pages on the old site; no content of their own
+      { source: "/:p(video|player-embed|user-videos|search-videos|video-tag|video-category|4177-2)", destination: "/videos", permanent: true },
     ];
   },
 };

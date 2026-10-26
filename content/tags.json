@@ -1,0 +1,380 @@
+[
+ {
+  "id": 62,
+  "slug": "arafat",
+  "name": "Arafat",
+  "count": 2
+ },
+ {
+  "id": 64,
+  "slug": "battle-of-uhud",
+  "name": "Battle Of Uhud",
+  "count": 1
+ },
+ {
+  "id": 93,
+  "slug": "darun-nadwah",
+  "name": "Darun Nadwah",
+  "count": 1
+ },
+ {
+  "id": 96,
+  "slug": "excellence-of-hajj",
+  "name": "Excellence of Hajj",
+  "count": 2
+ },
+ {
+  "id": 46,
+  "slug": "hajj",
+  "name": "Hajj",
+  "count": 125
+ },
+ {
+  "id": 48,
+  "slug": "hajj-and-umrah",
+  "name": "Hajj and Umrah",
+  "count": 155
+ },
+ {
+  "id": 100,
+  "slug": "hajj-for-others",
+  "name": "Hajj for others",
+  "count": 1
+ },
+ {
+  "id": 97,
+  "slug": "hajj-of-children",
+  "name": "Hajj of children",
+  "count": 1
+ },
+ {
+  "id": 99,
+  "slug": "hajj-of-the-dead",
+  "name": "Hajj of the dead",
+  "count": 1
+ },
+ {
+  "id": 105,
+  "slug": "haram",
+  "name": "Haram",
+  "count": 1
+ },
+ {
+  "id": 88,
+  "slug": "hateem",
+  "name": "Hateem",
+  "count": 2
+ },
+ {
+  "id": 89,
+  "slug": "hijr-ismail",
+  "name": "Hijr Ismail",
+  "count": 1
+ },
+ {
+  "id": 59,
+  "slug": "hira-cave",
+  "name": "hira cave",
+  "count": 1
+ },
+ {
+  "id": 104,
+  "slug": "ifrad",
+  "name": "Ifrad",
+  "count": 1
+ },
+ {
+  "id": 56,
+  "slug": "ihram",
+  "name": "ihram",
+  "count": 6
+ },
+ {
+  "id": 107,
+  "slug": "kaaba",
+  "name": "kaaba",
+  "count": 2
+ },
+ {
+  "id": 53,
+  "slug": "kiswa",
+  "name": "kiswa",
+  "count": 1
+ },
+ {
+  "id": 60,
+  "slug": "kiswa-of-kaaba",
+  "name": "Kiswa Of Kaaba",
+  "count": 1
+ },
+ {
+  "id": 52,
+  "slug": "madeena",
+  "name": "Madeena",
+  "count": 2
+ },
+ {
+  "id": 106,
+  "slug": "madinah",
+  "name": "Madinah",
+  "count": 1
+ },
+ {
+  "id": 86,
+  "slug": "makkah-haram-sharief",
+  "name": "makkah-haram-sharief",
+  "count": 2
+ },
+ {
+  "id": 109,
+  "slug": "marvas",
+  "name": "Marvas",
+  "count": 1
+ },
+ {
+  "id": 63,
+  "slug": "masjidul-haram",
+  "name": "masjidul haram",
+  "count": 1
+ },
+ {
+  "id": 94,
+  "slug": "mecca",
+  "name": "mecca",
+  "count": 3
+ },
+ {
+  "id": 55,
+  "slug": "miqat",
+  "name": "miqat",
+  "count": 1
+ },
+ {
+  "id": 95,
+  "slug": "mount-safa",
+  "name": "Mount Safa",
+  "count": 1
+ },
+ {
+  "id": 85,
+  "slug": "multazam",
+  "name": "Multazam",
+  "count": 2
+ },
+ {
+  "id": 61,
+  "slug": "muzdalifah",
+  "name": "muzdalifah",
+  "count": 1
+ },
+ {
+  "id": 101,
+  "slug": "prophets-hajj",
+  "name": "Prophet's Hajj",
+  "count": 1
+ },
+ {
+  "id": 102,
+  "slug": "qiran",
+  "name": "Qir'an",
+  "count": 1
+ },
+ {
+  "id": 87,
+  "slug": "ruknul-yamani",
+  "name": "Ruknul Yamani",
+  "count": 1
+ },
+ {
+  "id": 58,
+  "slug": "say",
+  "name": "sa'y",
+  "count": 1
+ },
+ {
+  "id": 65,
+  "slug": "safa-and-marwa",
+  "name": "safa and marwa",
+  "count": 1
+ },
+ {
+  "id": 54,
+  "slug": "sour-cave",
+  "name": "sour cave",
+  "count": 1
+ },
+ {
+  "id": 108,
+  "slug": "swafa",
+  "name": "Swafa",
+  "count": 1
+ },
+ {
+  "id": 103,
+  "slug": "tamatu",
+  "name": "Tamat'u",
+  "count": 1
+ },
+ {
+  "id": 57,
+  "slug": "tawaf",
+  "name": "tawaf",
+  "count": 6
+ },
+ {
+  "id": 47,
+  "slug": "umrah",
+  "name": "Umrah",
+  "count": 116
+ },
+ {
+  "id": 98,
+  "slug": "womens-hajj",
+  "name": "Women's Hajj",
+  "count": 1
+ },
+ {
+  "id": 50,
+  "slug": "zamzam-water",
+  "name": "zamzam water",
+  "count": 3
+ },
+ {
+  "id": 51,
+  "slug": "zamzam-well",
+  "name": "zamzam well",
+  "count": 2
+ },
+ {
+  "id": 83,
+  "slug": "%e0%b4%85%e0%b4%b1%e0%b4%ab",
+  "name": "അറഫ",
+  "count": 1
+ },
+ {
+  "id": 69,
+  "slug": "%e0%b4%87%e0%b4%ac%e0%b5%8d%e0%b4%b0%e0%b4%be%e0%b4%b9%e0%b4%bf%e0%b4%82-%e0%b4%a8%e0%b4%ac%e0%b4%bf",
+  "name": "ഇബ്രാഹിം നബി",
+  "count": 99
+ },
+ {
+  "id": 72,
+  "slug": "%e0%b4%87%e0%b4%b8%e0%b5%8d%e0%b4%ae%e0%b4%be%e0%b4%88%e0%b5%bd-%e0%b4%a8%e0%b4%ac%e0%b4%bf",
+  "name": "ഇസ്മാഈൽ നബി",
+  "count": 99
+ },
+ {
+  "id": 81,
+  "slug": "%e0%b4%89%e0%b4%b9%e0%b5%81%e0%b4%a6%e0%b5%8d",
+  "name": "ഉഹുദ്",
+  "count": 1
+ },
+ {
+  "id": 67,
+  "slug": "%e0%b4%95%e0%b4%85%e0%b5%8d%e0%b4%ac",
+  "name": "കഅ്ബ",
+  "count": 99
+ },
+ {
+  "id": 78,
+  "slug": "%e0%b4%95%e0%b4%bf%e0%b4%b8%e0%b5%8d-%e0%b4%b5",
+  "name": "കിസ് വ",
+  "count": 98
+ },
+ {
+  "id": 79,
+  "slug": "%e0%b4%96%e0%b4%bf%e0%b4%b2%e0%b5%8d%e0%b4%b2",
+  "name": "ഖില്ല",
+  "count": 98
+ },
+ {
+  "id": 74,
+  "slug": "%e0%b4%a4%e0%b5%8d%e0%b4%b5%e0%b4%b5%e0%b4%be%e0%b4%ab%e0%b5%8d",
+  "name": "ത്വവാഫ്",
+  "count": 98
+ },
+ {
+  "id": 80,
+  "slug": "%e0%b4%ae%e0%b4%95%e0%b5%8d%e0%b4%95-%e0%b4%ae%e0%b4%a6%e0%b5%80%e0%b4%a8",
+  "name": "മക്ക മദീന",
+  "count": 98
+ },
+ {
+  "id": 76,
+  "slug": "%e0%b4%ae%e0%b4%96%e0%b4%be%e0%b4%ae%e0%b5%81-%e0%b4%87%e0%b4%ac%e0%b5%8d%e0%b4%b1%e0%b4%be%e0%b4%b9%e0%b5%80%e0%b4%82",
+  "name": "മഖാമു ഇബ്റാഹീം",
+  "count": 98
+ },
+ {
+  "id": 92,
+  "slug": "%e0%b4%ae%e0%b4%b8%e0%b5%8d%e0%b4%9c%e0%b4%bf%e0%b4%a6%e0%b5%81-%e0%b4%96%e0%b5%81%e0%b4%ac%e0%b4%be",
+  "name": "മസ്ജിദു ഖുബാ",
+  "count": 1
+ },
+ {
+  "id": 66,
+  "slug": "%e0%b4%ae%e0%b4%b8%e0%b5%8d%e0%b4%9c%e0%b4%bf%e0%b4%a6%e0%b5%81%e0%b5%bd-%e0%b4%b9%e0%b4%b1%e0%b4%be%e0%b4%82",
+  "name": "മസ്ജിദുൽ ഹറാം",
+  "count": 99
+ },
+ {
+  "id": 82,
+  "slug": "%e0%b4%ae%e0%b4%bf%e0%b4%a8",
+  "name": "മിന",
+  "count": 87
+ },
+ {
+  "id": 91,
+  "slug": "%e0%b4%ae%e0%b5%80%e0%b4%b8%e0%b4%be%e0%b4%ac%e0%b5%81-%e0%b4%b1%e0%b4%b9%e0%b5%8d%e0%b4%ae%e0%b4%a4%e0%b5%8d%e0%b4%a4%e0%b5%8d",
+  "name": "മീസാബു റഹ്മത്ത്",
+  "count": 1
+ },
+ {
+  "id": 71,
+  "slug": "%e0%b4%b8%e0%b4%ab-%e0%b4%ae%e0%b5%bc%e0%b4%b5",
+  "name": "സഫ മർവ",
+  "count": 99
+ },
+ {
+  "id": 73,
+  "slug": "%e0%b4%b8%e0%b4%82%e0%b4%b8%e0%b4%82",
+  "name": "സംസം",
+  "count": 99
+ },
+ {
+  "id": 68,
+  "slug": "%e0%b4%b9%e0%b4%9c%e0%b4%b1%e0%b5%81%e0%b5%bd-%e0%b4%85%e0%b4%b8%e0%b5%8d-%e0%b4%b5%e0%b4%a6%e0%b5%8d",
+  "name": "ഹജറുൽ അസ് വദ്",
+  "count": 99
+ },
+ {
+  "id": 77,
+  "slug": "%e0%b4%b9%e0%b4%9c%e0%b5%8d%e0%b4%9c%e0%b5%81%e0%b4%82-%e0%b4%89%e0%b4%82%e0%b4%b1%e0%b4%af%e0%b5%81%e0%b4%82",
+  "name": "ഹജ്ജും ഉംറയും",
+  "count": 98
+ },
+ {
+  "id": 90,
+  "slug": "%e0%b4%b9%e0%b4%a4%e0%b5%80%e0%b4%82",
+  "name": "ഹതീം",
+  "count": 1
+ },
+ {
+  "id": 70,
+  "slug": "%e0%b4%b9%e0%b4%be%e0%b4%9c%e0%b4%b1-%e0%b4%ac%e0%b5%80%e0%b4%b5%e0%b4%bf",
+  "name": "ഹാജറ ബീവി",
+  "count": 99
+ },
+ {
+  "id": 84,
+  "slug": "%e0%b4%b9%e0%b4%bf%e0%b4%b1%e0%b4%be%e0%b4%97%e0%b5%81%e0%b4%b9",
+  "name": "ഹിറാഗുഹ",
+  "count": 1
+ },
+ {
+  "id": 75,
+  "slug": "%e0%b4%b1%e0%b5%81%e0%b4%95%e0%b5%8d%e0%b4%a8%e0%b5%81%e0%b5%bd-%e0%b4%af%e0%b4%ae%e0%b4%be%e0%b4%a8%e0%b4%bf",
+  "name": "റുക്നുൽ യമാനി",
+  "count": 98
+ }
+]

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PostCard from "@/components/PostCard";
 import SectionHeader from "@/components/SectionHeader";
-import { allPosts, decode, fmtDate, getCategory, getPost, postsIn } from "@/lib/data";
+import { allPosts, decode, fmtDate, getCategory, getPost, getTag, postsIn } from "@/lib/data";
 
 // every post is prerendered via generateStaticParams; silences the dev-only instant-nav warning on `params`
 export const instant = false;
@@ -39,6 +39,15 @@ export default async function PostPage({ params }: PageProps<"/[category]/[slug]
           <Image src={post.image} alt="" width={1200} height={750} priority sizes="(min-width:672px) 672px, 100vw" className="my-8 h-auto w-full rounded-2xl" />
         )}
         <div className="wp-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+        {post.tags.length > 0 && (
+          <ul className="mt-10 flex flex-wrap gap-2 text-sm" aria-label="Tags">
+            {post.tags.map((s) => (
+              <li key={s}>
+                <Link href={`/tag/${s}`} className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-800 hover:bg-emerald-100">#{getTag(s)?.name ?? s}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </article>
       {related.length > 0 && (
         <section className="mt-16 border-t border-black/5 pt-10">

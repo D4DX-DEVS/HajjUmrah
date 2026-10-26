@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PageTitle from "@/components/PageTitle";
 import VideoPlayer from "@/components/VideoPlayer";
 import { allVideos, decode } from "@/lib/data";
@@ -12,7 +13,9 @@ export default function Videos() {
         {allVideos.filter((v) => v.youtubeId).map((v) => (
           <div key={v.slug}>
             <VideoPlayer id={v.youtubeId!} title={decode(v.title)} />
-            <h2 className="mt-3 font-semibold leading-snug">{decode(v.title)}</h2>
+            <h2 className="mt-3 font-semibold leading-snug">
+              <Link href={`/video/${v.slug}`} className="hover:text-emerald-700">{decode(v.title)}</Link>
+            </h2>
           </div>
         ))}
       </div>
