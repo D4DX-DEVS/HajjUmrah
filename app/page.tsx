@@ -16,7 +16,9 @@ export default function Home() {
       <Hero posts={hero} />
       {sections.map((s) => {
         const cat = allCategories.find((c) => c.slug === s)!;
-        const pool = allPosts.filter((p) => p.category === s && !seen.has(p.id));
+        // primary-category posts first, then any other post tagged with this category
+        const unseen = allPosts.filter((p) => p.categories.includes(s) && !seen.has(p.id));
+        const pool = [...unseen.filter((p) => p.category === s), ...unseen.filter((p) => p.category !== s)];
         const lead = pool.find((p) => p.image) ?? pool[0]; // lead card needs a picture
         if (!lead) return null;
         const rest = pool.filter((p) => p !== lead).slice(0, 3);
@@ -25,9 +27,9 @@ export default function Home() {
           <section key={s}>
             <SectionHeader title={cat.name} href={`/${s}`} />
             <div className="grid gap-8 lg:grid-cols-5">
-              <div className="lg:col-span-3"><PostCard post={lead} lead /></div>
+              <div className={rest.length ? "lg:col-span-3" : "lg:col-span-5"}><PostCard post={lead} lead wide={!rest.length} /></div>
               {rest.length > 0 && (
-                <div className="divide-y divide-black/5 lg:col-span-2">
+                <div className="flex flex-col divide-y divide-black/5 lg:col-span-2">
                   {rest.map((p) => <PostRow key={p.id} post={p} />)}
                 </div>
               )}

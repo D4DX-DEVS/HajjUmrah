@@ -2,12 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { decode, fmtDate, getCategory, postHref, type Post } from "@/lib/data";
 
-export default function PostCard({ post, lead }: { post: Post; lead?: boolean }) {
+// lead: bigger title; wide: image beside text on large screens (section with no side list)
+export default function PostCard({ post, lead, wide }: { post: Post; lead?: boolean; wide?: boolean }) {
   return (
-    <article className="group flex flex-col">
-      <Link href={postHref(post)} tabIndex={-1} aria-hidden className="relative block aspect-[16/10] overflow-hidden rounded-xl bg-emerald-50">
+    <article className={`group flex flex-col ${wide ? "lg:flex-row lg:items-center lg:gap-8" : ""}`}>
+      <Link
+        href={postHref(post)}
+        tabIndex={-1}
+        aria-hidden
+        className={`relative block overflow-hidden rounded-xl bg-emerald-50 ${lead ? "aspect-video" : "aspect-[16/10]"} ${wide ? "lg:w-1/2 lg:shrink-0" : ""}`}
+      >
         {post.image && (
-          <Image src={post.image} alt="" fill sizes="(min-width:1024px) 360px, (min-width:640px) 50vw, 100vw" className="object-cover transition duration-300 group-hover:scale-105" />
+          <Image src={post.image} alt="" fill sizes="(min-width:1024px) 600px, (min-width:640px) 50vw, 100vw" className="object-cover transition duration-300 group-hover:scale-105" />
         )}
       </Link>
       <div className="mt-3 flex flex-1 flex-col gap-1.5">
