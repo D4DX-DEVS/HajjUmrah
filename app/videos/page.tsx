@@ -1,3 +1,5 @@
+import PageTitle from "@/components/PageTitle";
+import VideoPlayer from "@/components/VideoPlayer";
 import { allVideos, decode } from "@/lib/data";
 
 export const metadata = { title: "Videos" };
@@ -5,18 +7,12 @@ export const metadata = { title: "Videos" };
 export default function Videos() {
   return (
     <>
-      <h1 className="mb-6 border-b-2 border-emerald-700 pb-2 text-2xl font-bold">Videos</h1>
-      <div className="grid gap-6 sm:grid-cols-2">
-        {allVideos.map((v) => (
+      <PageTitle>Videos</PageTitle>
+      <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {allVideos.filter((v) => v.youtubeId).map((v) => (
           <div key={v.slug}>
-            <iframe
-              src={`https://www.youtube.com/embed/${v.youtubeId}`}
-              title={decode(v.title)}
-              loading="lazy"
-              allowFullScreen
-              className="aspect-video w-full rounded-lg"
-            />
-            <h2 className="mt-2 font-semibold">{decode(v.title)}</h2>
+            <VideoPlayer id={v.youtubeId!} title={decode(v.title)} />
+            <h2 className="mt-3 font-semibold leading-snug">{decode(v.title)}</h2>
           </div>
         ))}
       </div>

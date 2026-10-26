@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Malayalam } from "next/font/google";
+import BackToTop from "@/components/BackToTop";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -18,8 +19,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ml" className={`${font.className} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-stone-50 text-neutral-900">
         <Header />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-10">{children}</main>
         <Footer />
+        <BackToTop />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import PageTitle from "@/components/PageTitle";
 import SearchResults from "@/components/SearchResults";
 import { allPosts, decode, postHref } from "@/lib/data";
 
@@ -8,11 +9,11 @@ const index = allPosts.map((p) => ({ t: decode(p.title), e: decode(p.excerpt), h
 
 export default function Search() {
   return (
-    <>
-      <h1 className="mb-6 border-b-2 border-emerald-700 pb-2 text-2xl font-bold">Search</h1>
+    <div className="mx-auto max-w-2xl">
+      <PageTitle>Search</PageTitle>
       <Suspense>
         <SearchResults index={index} />
       </Suspense>
-    </>
+    </div>
   );
 }

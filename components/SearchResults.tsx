@@ -10,11 +10,11 @@ export default function SearchResults({ index }: { index: Item[] }) {
   const hits = index.filter((i) => (i.t + " " + i.e).toLowerCase().includes(q));
   if (!hits.length) return <p className="text-neutral-600">No results.</p>;
   return (
-    <ul className="space-y-5">
+    <ul className="divide-y divide-black/5">
       {hits.map((i) => (
-        <li key={i.h}>
+        <li key={i.h} className="py-4">
           <Link href={i.h} className="text-lg font-semibold hover:text-emerald-700">{i.t}</Link>
-          <p className="line-clamp-2 text-sm text-neutral-600">{i.e}</p>
+          <p className="mt-1 line-clamp-2 text-sm text-neutral-600">{i.e}</p>
         </li>
       ))}
     </ul>

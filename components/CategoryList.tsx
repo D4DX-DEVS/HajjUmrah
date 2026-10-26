@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import PageTitle from "@/components/PageTitle";
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import { getCategory, pageCount, postsIn, slicePage } from "@/lib/data";
@@ -10,8 +11,8 @@ export default function CategoryList({ category, page }: { category: string; pag
   if (!cat || !Number.isInteger(page) || page < 1 || page > total) notFound();
   return (
     <>
-      <h1 className="mb-6 border-b-2 border-emerald-700 pb-2 text-2xl font-bold">{cat.name}</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <PageTitle sub={`${posts.length} posts`}>{cat.name}</PageTitle>
+      <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {slicePage(posts, page).map((p) => <PostCard key={p.id} post={p} />)}
       </div>
       <Pagination base={`/${category}`} page={page} total={total} />
