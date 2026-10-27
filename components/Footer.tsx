@@ -26,6 +26,7 @@ export default function Footer() {
             <li><Link href="/about" className={link}>About</Link></li>
             <li><Link href="/contact" className={link}>Contact</Link></li>
             <li><Link href="/privacy-policy" className={link}>Privacy &amp; Policy</Link></li>
+            <li><Link href="/admin" rel="nofollow" className={link}>Admin</Link></li>
             <li><a href="https://islamonlive.in" className={link}>islamonlive.in</a></li>
           </ul>
         </nav>
