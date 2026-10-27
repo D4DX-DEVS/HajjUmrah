@@ -1,20 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
   "name": "hajj-next",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    // `next build` output (output: "export")
+    "directory": "./out",
+    "binding": "ASSETS",
+    // real 404 status with out/404.html
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash",
+    // only the contact API runs Worker code; pages and images are free static assets
+    "run_worker_first": ["/api/*"]
   },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      // must match "name" above
-      "service": "hajj-next"
-    }
-  ],
   // contact-form messages (table created by migrations/)
   "d1_databases": [
     {
@@ -23,9 +21,5 @@
       "database_id": "7f743071-4df2-4f35-a78e-76be82fe33b4",
       "migrations_dir": "migrations"
     }
-  ],
-  // next/image optimization (Cloudflare Images; may incur cost beyond the free allowance)
-  "images": {
-    "binding": "IMAGES"
-  }
+  ]
 }

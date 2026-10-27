@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { SITE, allCategories, allPosts, allTags, allVideos, authors, pageCount, postHref, postsIn, postsTagged } from "@/lib/data";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const u = (p: string, lastModified?: string) => ({ url: SITE + encodeURI(p), lastModified });
   return [
