@@ -13,6 +13,7 @@ export default function Home() {
   const seen = new Set(hero.map((p) => p.id)); // each post appears once on the page
   return (
     <div className="space-y-12">
+      <h1 className="sr-only">Hajj and Umrah</h1>
       <Hero posts={hero} />
       {sections.map((s) => {
         const cat = allCategories.find((c) => c.slug === s)!;

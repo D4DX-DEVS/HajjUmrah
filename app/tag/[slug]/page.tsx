@@ -7,8 +7,8 @@ export const instant = false;
 export const generateStaticParams = () => allTags.map((t) => ({ slug: t.slug }));
 
 export async function generateMetadata({ params }: PageProps<"/tag/[slug]">) {
-  const { slug } = await params;
-  return { title: getTag(slug)?.name };
+  const tag = getTag((await params).slug);
+  return { title: `#${tag?.name}`, alternates: { canonical: `/tag/${tag?.slug}` } };
 }
 
 export default async function TagPage({ params }: PageProps<"/tag/[slug]">) {

@@ -12,7 +12,7 @@ export const generateStaticParams = () =>
 
 export async function generateMetadata({ params }: PageProps<"/[category]/page/[n]">) {
   const { category, n } = await params;
-  return { title: `${getCategory(category)?.name} - Page ${n}` };
+  return { title: `${getCategory(category)?.name} - Page ${n}`, alternates: { canonical: `/${category}/page/${n}` } };
 }
 
 export default async function CategoryPageN({ params }: PageProps<"/[category]/page/[n]">) {

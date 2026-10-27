@@ -8,6 +8,11 @@ export const instant = false;
 
 export const generateStaticParams = () => authors.map((a) => ({ slug: a.slug }));
 
+export async function generateMetadata({ params }: PageProps<"/author/[slug]">) {
+  const { slug } = await params;
+  return { title: authors.find((a) => a.slug === slug)?.name, alternates: { canonical: `/author/${slug}` } };
+}
+
 export default async function AuthorPage({ params }: PageProps<"/author/[slug]">) {
   const { slug } = await params;
   const author = authors.find((a) => a.slug === slug);
@@ -19,7 +24,7 @@ export default async function AuthorPage({ params }: PageProps<"/author/[slug]">
       <PageTitle sub={`${posts.length} ${posts.length === 1 ? "post" : "posts"}`}>{author.name}</PageTitle>
       {bio && <p className="-mt-4 mb-8 max-w-2xl whitespace-pre-line text-neutral-700">{bio}</p>}
       <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((p) => <PostCard key={p.id} post={p} />)}
+        {posts.map((p) => <PostCard key={p.id} post={p} as="h2" />)}
       </div>
     </>
   );

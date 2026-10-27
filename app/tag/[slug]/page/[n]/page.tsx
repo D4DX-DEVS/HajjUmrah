@@ -12,7 +12,8 @@ export const generateStaticParams = () =>
 
 export async function generateMetadata({ params }: PageProps<"/tag/[slug]/page/[n]">) {
   const { slug, n } = await params;
-  return { title: `${getTag(slug)?.name} - Page ${n}` };
+  const tag = getTag(slug);
+  return { title: `#${tag?.name} - Page ${n}`, alternates: { canonical: `/tag/${tag?.slug}/page/${n}` } };
 }
 
 export default async function TagPageN({ params }: PageProps<"/tag/[slug]/page/[n]">) {

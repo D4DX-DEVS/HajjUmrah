@@ -11,7 +11,7 @@ export type Post = (typeof posts)[number];
 const dec = (s: string) => {
   try { return decodeURIComponent(s); } catch { return s; }
 };
-export const allPosts = posts.map((p) => ({ ...p, slug: dec(p.slug) })).sort((a, b) => b.date.localeCompare(a.date));
+export const allPosts = posts.map((p) => ({ ...p, slug: dec(p.slug), tags: p.tags.map(dec) })).sort((a, b) => b.date.localeCompare(a.date));
 export const allCategories = categories;
 export const allVideos = videos.map((v) => ({ ...v, slug: dec(v.slug) }));
 export const getVideo = (slug: string) => allVideos.find((v) => v.slug === dec(slug));
@@ -22,8 +22,8 @@ export const getPost = (cat: string, slug: string) => allPosts.find((p) => p.cat
 export const authors = [...new Map(allPosts.map((p) => [p.author.slug, p.author])).values()];
 export const postsBy = (slug: string) => allPosts.filter((p) => p.author.slug === slug);
 export const postHref = (p: Post) => `/${p.category}/${p.slug}`;
-export const allTags = tags;
-export const getTag = (slug: string) => tags.find((t) => t.slug === dec(slug));
+export const allTags = tags.map((t) => ({ ...t, slug: dec(t.slug) }));
+export const getTag = (slug: string) => allTags.find((t) => t.slug === dec(slug));
 export const postsTagged = (slug: string) => allPosts.filter((p) => p.tags.includes(slug));
 export const authorBio = (slug: string) => authorBios.find((a) => a.slug === slug)?.description;
 export const SITE = "https://hajj.islamonlive.in";
