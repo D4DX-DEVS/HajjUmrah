@@ -15,6 +15,15 @@
       "service": "hajj-next"
     }
   ],
+  // contact-form messages (table created by migrations/)
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hajjumra",
+      "database_id": "7f743071-4df2-4f35-a78e-76be82fe33b4",
+      "migrations_dir": "migrations"
+    }
+  ],
   // next/image optimization (Cloudflare Images; may incur cost beyond the free allowance)
   "images": {
     "binding": "IMAGES"

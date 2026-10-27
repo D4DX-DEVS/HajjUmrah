@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
+// next/image may only load remote images from the R2 host when NEXT_PUBLIC_MEDIA_URL is set
+const media = process.env.NEXT_PUBLIC_MEDIA_URL ? new URL(process.env.NEXT_PUBLIC_MEDIA_URL) : null;
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: media
+    ? { remotePatterns: [{ protocol: media.protocol === "http:" ? "http" : "https", hostname: media.hostname, pathname: "/uploads/**" }] }
+    : undefined,
   poweredByHeader: false,
   async headers() {
     return [

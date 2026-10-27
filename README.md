@@ -18,7 +18,25 @@ npm start       # serve the build
 
 | Env var | Purpose |
 |---|---|
-| `CONTACT_WEBHOOK_URL` | Contact form POSTs `{name, email, message}` JSON here (Formspree, Slack, Zapier...). Unset: the form returns 503. |
+| `CONTACT_WEBHOOK_URL` | Optional. Contact form also POSTs `{name, email, message}` JSON here (Formspree, Zapier...). |
+| `NEXT_PUBLIC_MEDIA_URL` | Optional, **build time**. Public address of the R2 bucket (no trailing slash). When set, post images and in-article images load from `<url>/uploads/...` instead of the site itself. Also set it as a build variable on Cloudflare. |
+| `R2_*` | Only used by `scripts/upload-r2.mjs` (S3 keys for the `hajjumra` bucket). |
+| `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `D1_DATABASE_ID` | Only used by the wrangler CLI (`db:migrate`, `messages`). The Worker itself uses the `DB` binding in `wrangler.jsonc`. |
+
+The local `.env` is git-ignored and never uploaded. Secrets are only needed on your machine and, for `CONTACT_WEBHOOK_URL`, as a Worker secret.
+
+## Contact messages (Cloudflare D1)
+
+Each contact-form message is saved in the `contact_messages` table of the D1 database `hajjumra` (binding `DB`), and also forwarded to `CONTACT_WEBHOOK_URL` if set. If neither is available the form returns 503.
+
+```bash
+npm run db:migrate   # create/upgrade the table (migrations/), already applied once
+npm run messages     # print the 50 latest messages
+```
+
+## Images on R2
+
+The 504 files in `public/uploads` are also in the R2 bucket `hajjumra` under `uploads/...`. To serve them from R2: make the bucket public (custom domain such as `media.islamonlive.in`, or r2.dev), set `NEXT_PUBLIC_MEDIA_URL`, rebuild. Keep `logo-hajj.png` and the two `cropped-icon-*.png` files in `public/uploads` (the logo and favicons are always served from the site). After adding images: `npm i --no-save @aws-sdk/client-s3 && node scripts/upload-r2.mjs`.
 
 ## Routes
 

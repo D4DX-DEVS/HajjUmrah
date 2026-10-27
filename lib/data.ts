@@ -11,7 +11,11 @@ export type Post = (typeof posts)[number];
 const dec = (s: string) => {
   try { return decodeURIComponent(s); } catch { return s; }
 };
-export const allPosts = posts.map((p) => ({ ...p, slug: dec(p.slug), tags: p.tags.map(dec) })).sort((a, b) => b.date.localeCompare(a.date));
+// Optional: serve /uploads/** from R2 (bucket keys mirror the paths). Set at build time, e.g. https://media.example.com
+const MEDIA = (process.env.NEXT_PUBLIC_MEDIA_URL ?? "").replace(/\/+$/, "");
+const media = (s: string) => (MEDIA ? s.replace(/(^|[\s"',(])\/uploads\//g, `$1${MEDIA}/uploads/`) : s);
+export const allPosts = posts
+  .map((p) => ({ ...p, slug: dec(p.slug), tags: p.tags.map(dec), image: p.image && media(p.image), content: media(p.content) })).sort((a, b) => b.date.localeCompare(a.date));
 export const allCategories = categories;
 export const allVideos = videos.map((v) => ({ ...v, slug: dec(v.slug) }));
 export const getVideo = (slug: string) => allVideos.find((v) => v.slug === dec(slug));
