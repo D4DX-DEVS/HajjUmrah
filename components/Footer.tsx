@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { allCategories } from "@/lib/data";
 
-const link = "hover:text-emerald-700";
+const link = "inline-block py-1 hover:text-emerald-700";
 
 export default function Footer() {
   return (

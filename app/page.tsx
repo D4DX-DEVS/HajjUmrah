@@ -6,6 +6,8 @@ import SectionHeader from "@/components/SectionHeader";
 import YtThumb from "@/components/YtThumb";
 import { allCategories, allPosts, allVideos, decode } from "@/lib/data";
 
+export const metadata = { alternates: { canonical: "/" } };
+
 const sections = ["hajj-umrah", "articles", "fatwa", "rituals", "fiqh", "history-culture"];
 
 export default function Home() {
