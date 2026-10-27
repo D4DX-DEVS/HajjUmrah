@@ -1,3 +1,4 @@
+// LEGACY: one-off WordPress import. Posts now live in content/posts/<id>.json, so do not re-run this (it writes content/posts.json).
 // One-off WP -> local sync of what export.mjs missed. Run: node scripts/sync-extras.mjs
 // - post category = first path segment of the live permalink (so URLs match the WP site exactly)
 // - tags: content/tags.json + post.tags (slugs)

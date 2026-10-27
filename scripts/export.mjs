@@ -1,3 +1,4 @@
+// LEGACY: one-off WordPress import. Posts now live in content/posts/<id>.json, so do not re-run this (it writes content/posts.json).
 // One-off WP -> local export. Run: node scripts/export.mjs
 import fs from "node:fs/promises";
 import path from "node:path";

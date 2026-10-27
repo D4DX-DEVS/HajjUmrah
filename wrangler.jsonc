@@ -13,7 +13,15 @@
     // only the contact API runs Worker code; pages and images are free static assets
     "run_worker_first": ["/api/*"]
   },
-  // contact-form messages (table created by migrations/)
+  // admin: images go to this bucket, posts are committed to this repo (secrets: ADMIN_PASSWORD, GITHUB_TOKEN)
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "hajjumra" }],
+  "vars": {
+    "GITHUB_REPO": "D4DX-DEVS/HajjUmrah",
+    "GITHUB_BRANCH": "main",
+    // public address of the bucket, used for image previews in the admin
+    "MEDIA_URL": "https://pub-c7884d3013394bc9948f3795c715c94a.r2.dev"
+  },
+  // contact-form messages and admin login attempts (tables created by migrations/)
   "d1_databases": [
     {
       "binding": "DB",

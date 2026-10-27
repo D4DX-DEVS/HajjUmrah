@@ -1,11 +1,8 @@
 // Cloudflare Worker entry. Static assets are served directly (see wrangler.jsonc run_worker_first);
-// only /api/* reaches this code. Keep it tiny: the free plan allows 10 ms CPU per request.
-type D1 = { prepare(q: string): { bind(...v: unknown[]): { run(): Promise<unknown> } } };
-interface Env {
-  ASSETS: { fetch(req: Request): Promise<Response> };
-  DB?: D1; // contact_messages table (migrations/)
-  CONTACT_WEBHOOK_URL?: string; // optional secret: also forward as JSON (Formspree, Zapier...)
-}
+// only /api/* reaches this code. Keep it light: the free plan allows 10 ms CPU per request.
+import { handleAdmin } from "./admin";
+import type { Env } from "./env";
+
 type Message = { name: string; email: string; message: string };
 
 const json = (body: unknown, status = 200) => Response.json(body, { status });
@@ -48,6 +45,7 @@ const worker = {
   async fetch(req: Request, env: Env): Promise<Response> {
     const { pathname } = new URL(req.url);
     if (pathname === "/api/contact") return contact(req, env);
+    if (pathname.startsWith("/api/admin/")) return handleAdmin(req, env);
     if (pathname.startsWith("/api/")) return new Response("Not Found", { status: 404 });
     return env.ASSETS.fetch(req);
   },

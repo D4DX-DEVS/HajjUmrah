@@ -13,7 +13,30 @@ npm run build   # static export into out/
 
 `node scripts/export.mjs` re-exports posts, categories, pages, videos and images from the WordPress REST API. It overwrites `content/` and `public/uploads`. The JSON is otherwise the source of truth.
 
-## Adding a post
+## Admin (`/admin`)
+
+A password-protected page to add, edit and delete posts and manage the Videos list, with image upload. Saving a post **commits a JSON file to GitHub** (`content/posts/<id>.json`); the connected Git deploy then rebuilds the site, so a change is live about 2-3 minutes later. Nothing is stored in a database except failed-login counts.
+
+How it works: the page is static; `/api/admin/*` (`worker/admin.ts`) checks a signed login cookie, validates and sanitizes the post, and writes to GitHub with a token. Images go to the R2 bucket (binding `MEDIA`). 5 wrong passwords from one address lock it out for 15 minutes.
+
+One-time setup (the Worker must already be deployed once):
+
+1. **GitHub token.** GitHub → Settings → Developer settings → Fine-grained tokens → Generate. Repository access: only `D4DX-DEVS/HajjUmrah`. Permission: Repository → **Contents: Read and write**. Set an expiry and note when to renew.
+2. **Secrets on the Worker** (Cloudflare dashboard → the Worker → Settings → Variables and Secrets, or `npx wrangler secret put NAME`):
+   - `ADMIN_PASSWORD`: a long random password (16+ characters). Changing it logs everyone out.
+   - `GITHUB_TOKEN`: the token from step 1.
+3. **Login table:** `npm run db:migrate` (adds `admin_login_attempts`; login refuses to work without it).
+4. **Git deploys** connected in Cloudflare (Workers & Pages → the Worker → Settings → Builds) so each commit rebuilds the site.
+5. Open `https://<your-site>/admin`.
+
+Notes:
+- Saving an existing post keeps its URL if you leave the slug alone, keeps extra categories (the "Also show in" boxes) and the original time of day.
+- The list in the admin is the last published version of the site; a post you just saved shows up there after the rebuild.
+- Post bodies are cleaned on save: scripts, event handlers, `javascript:`/`data:` links and any iframe except YouTube/Spotify are removed. This is a safety net, not a full HTML sanitizer, so keep the password private.
+- Extra protection (optional): put `/admin*` and `/api/admin/*` behind Cloudflare Access (free for small teams).
+- Local testing with the real token commits to the real repo. Test with a throwaway token/repo, or leave `GITHUB_TOKEN` empty.
+
+## Adding a post from the command line
 
 Write one text file (front matter, then the body) and run the script. It adds the post to `content/`, creates new authors and tags as needed, and copies the image into `public/uploads`.
 

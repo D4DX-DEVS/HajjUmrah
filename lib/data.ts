@@ -1,11 +1,31 @@
-import posts from "@/content/posts.json";
+import fs from "node:fs";
+import path from "node:path";
 import categories from "@/content/categories.json";
 import pages from "@/content/pages.json";
 import videos from "@/content/videos.json";
 import tags from "@/content/tags.json";
 import authorBios from "@/content/authors.json";
 
-export type Post = (typeof posts)[number];
+export type Post = {
+  id: number;
+  slug: string;
+  category: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  content: string;
+  image: string | null;
+  author: { id: number; name: string; slug: string };
+  categories: string[];
+  tags: string[];
+};
+
+// One JSON file per post (content/posts/<id>.json), read at build time.
+const postsDir = path.join(process.cwd(), "content/posts");
+const posts: Post[] = fs
+  .readdirSync(postsDir)
+  .filter((f) => f.endsWith(".json"))
+  .map((f) => JSON.parse(fs.readFileSync(path.join(postsDir, f), "utf8")));
 
 // WP exported some slugs percent-encoded; Next hands route params over decoded, so store them decoded.
 const dec = (s: string) => {

@@ -27,7 +27,8 @@ const fail = (m) => { console.error("Error: " + m); process.exit(1); };
 if (!file) fail("usage: node scripts/add-post.mjs <post-file> [--dry-run] [--push]");
 
 const read = (n) => JSON.parse(fs.readFileSync(`content/${n}.json`, "utf8"));
-const posts = read("posts"), cats = read("categories"), tags = read("tags");
+const posts = fs.readdirSync("content/posts").filter((f) => f.endsWith(".json")).map((f) => JSON.parse(fs.readFileSync(`content/posts/${f}`, "utf8")));
+const cats = read("categories"), tags = read("tags");
 const dec = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
@@ -117,8 +118,7 @@ const post = {
 console.log(`${dry ? "[dry run] " : ""}Adding: /${category}/${slug}  (${meta.title})  by ${author.name}, ${date}, tags: ${tagSlugs.join(", ") || "none"}${image ? ", image " + image : ""}`);
 if (dry) process.exit(0);
 
-posts.push(post);
-fs.writeFileSync("content/posts.json", JSON.stringify(posts, null, 1));
+fs.writeFileSync(`content/posts/${post.id}.json`, JSON.stringify(post, null, 1));
 fs.writeFileSync("content/tags.json", JSON.stringify(tags, null, 1));
 console.log("Saved. Next: npm run build (check it), then deploy.");
 if (image?.startsWith("/uploads/")) console.log("If images are served from R2 (NEXT_PUBLIC_MEDIA_URL is set), also run: node scripts/upload-r2.mjs");
