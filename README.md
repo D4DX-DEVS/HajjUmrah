@@ -13,6 +13,34 @@ npm run build   # static export into out/
 
 `node scripts/export.mjs` re-exports posts, categories, pages, videos and images from the WordPress REST API. It overwrites `content/` and `public/uploads`. The JSON is otherwise the source of truth.
 
+## Adding a post
+
+Write one text file (front matter, then the body) and run the script. It adds the post to `content/`, creates new authors and tags as needed, and copies the image into `public/uploads`.
+
+```
+---
+title: Title of the post
+slug: url-part              (needed when the title has no English words)
+category: articles          (articles, fatwa, fiqh, hajj-umrah, history-culture, rituals)
+author: Author Name
+date: 2026-10-27            (optional)
+tags: Hajj, Tawaf           (optional)
+image: photo.jpg            (optional; a file next to this one, /uploads/... or a URL)
+excerpt: Short summary      (optional)
+---
+Body: HTML, or plain text where a blank line starts a new paragraph.
+```
+
+```bash
+node scripts/add-post.mjs my-post.txt --dry-run   # check what it would add
+node scripts/add-post.mjs my-post.txt             # add it
+node scripts/upload-r2.mjs                        # only if images are served from R2 (uploads just the new files)
+npm run build                                     # optional local check
+node scripts/add-post.mjs my-post.txt --push      # same as adding, then git add/commit/push
+```
+
+Pushing to `main` redeploys the site when Git deploys are connected in Cloudflare (Workers & Pages → the Worker → Settings → Builds), so a new post goes live a couple of minutes after the push.
+
 ## Config
 
 | Env var | Purpose |
