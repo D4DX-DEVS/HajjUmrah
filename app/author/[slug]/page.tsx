@@ -3,9 +3,6 @@ import PageTitle from "@/components/PageTitle";
 import PostCard from "@/components/PostCard";
 import { authorBio, authors, postsBy } from "@/lib/data";
 
-// every param value is prerendered via generateStaticParams; silences the dev-only instant-nav warning on `params`
-export const instant = false;
-
 export const generateStaticParams = () => authors.map((a) => ({ slug: a.slug }));
 
 export async function generateMetadata({ params }: PageProps<"/author/[slug]">) {

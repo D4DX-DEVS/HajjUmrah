@@ -23,4 +23,20 @@ npm start       # serve the build
 ## Routes
 
 `/`, `/[category]`, `/[category]/page/[n]`, `/[category]/[slug]`, `/author/[slug]`, `/videos`, `/search`, `/about`, `/contact`, `/privacy-policy`, `/sitemap.xml`, `/robots.txt`.
-Old WordPress URLs (`/<slug>`, `/category/<cat>`) 308-redirect to the new ones (see `next.config.ts`).
+Old WordPress category URLs (`/category/<cat>`) and the video-plugin utility pages 308-redirect to the new ones (see `next.config.ts`). Post, tag and author URLs are unchanged from WordPress.
+
+## Deploy (Cloudflare Workers via OpenNext)
+
+The site runs on Cloudflare Workers through `@opennextjs/cloudflare`. Config lives in `wrangler.jsonc` and `open-next.config.ts`; `public/_headers` caches `/_next/static/*`.
+
+```bash
+npm run preview   # build for Workers and run it locally (workerd)
+npm run deploy    # build and deploy with wrangler (needs `wrangler login` or CLOUDFLARE_API_TOKEN)
+```
+
+Git integration (Workers Builds): connect the repo and set build command `npx opennextjs-cloudflare build` and deploy command `npx wrangler deploy`. Use Node 20.9 or newer.
+
+- Set `CONTACT_WEBHOOK_URL` as a secret in the Worker's Settings → Variables and Secrets (the local `.env` is not uploaded).
+- The Free plan allows 10 ms CPU per request, which Next.js rendering usually exceeds; use the Workers Paid plan.
+- `next/image` uses the Cloudflare Images binding (`IMAGES`); transformations beyond the free allowance are billed.
+- Add the domain under the Worker's Settings → Domains & Routes (the zone must be on Cloudflare DNS).

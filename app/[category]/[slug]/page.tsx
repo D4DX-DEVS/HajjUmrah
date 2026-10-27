@@ -5,9 +5,6 @@ import PostCard from "@/components/PostCard";
 import SectionHeader from "@/components/SectionHeader";
 import { allPosts, decode, fmtDate, getCategory, getPost, getTag, postsIn } from "@/lib/data";
 
-// every post is prerendered via generateStaticParams; silences the dev-only instant-nav warning on `params`
-export const instant = false;
-
 export const generateStaticParams = () => allPosts.map((p) => ({ category: p.category, slug: p.slug }));
 
 export async function generateMetadata({ params }: PageProps<"/[category]/[slug]">) {

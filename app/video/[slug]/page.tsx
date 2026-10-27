@@ -3,8 +3,6 @@ import PageTitle from "@/components/PageTitle";
 import VideoPlayer from "@/components/VideoPlayer";
 import { allVideos, decode, fmtDate, getVideo } from "@/lib/data";
 
-export const instant = false;
-
 export const generateStaticParams = () => allVideos.filter((v) => v.youtubeId).map((v) => ({ slug: v.slug }));
 
 export async function generateMetadata({ params }: PageProps<"/video/[slug]">) {

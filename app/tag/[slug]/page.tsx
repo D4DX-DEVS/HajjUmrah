@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import PostList from "@/components/PostList";
 import { allTags, getTag, postsTagged } from "@/lib/data";
 
-export const instant = false;
-
 export const generateStaticParams = () => allTags.map((t) => ({ slug: t.slug }));
 
 export async function generateMetadata({ params }: PageProps<"/tag/[slug]">) {

@@ -1,9 +1,6 @@
 import CategoryList from "@/components/CategoryList";
 import { allCategories, getCategory, pageCount, postsIn } from "@/lib/data";
 
-// every param value is prerendered via generateStaticParams; silences the dev-only instant-nav warning on `params`
-export const instant = false;
-
 // page 1 lives at /[category]; only emit 2..N
 export const generateStaticParams = () =>
   allCategories.flatMap((c) =>

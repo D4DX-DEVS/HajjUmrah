@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import PostList from "@/components/PostList";
 import { allTags, getTag, pageCount, postsTagged } from "@/lib/data";
 
-export const instant = false;
-
 // page 1 lives at /tag/[slug]; only emit 2..N
 export const generateStaticParams = () =>
   allTags.flatMap((t) =>

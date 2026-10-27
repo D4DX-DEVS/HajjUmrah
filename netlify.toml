@@ -1,3 +1,0 @@
-[build.environment]
-# Next.js 16 needs Node 20.9+
-NODE_VERSION = "22"
