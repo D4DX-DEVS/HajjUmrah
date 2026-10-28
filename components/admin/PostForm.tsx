@@ -170,7 +170,7 @@ export default function PostForm({ index, id: initialId, onDone, onError }: { in
       <div className="space-y-2">
         <label className={label}>Featured image (path or https:// address)<input value={image} onChange={(e) => { setImage(e.target.value); setPreview(""); }} className={field} /></label>
         <label className="inline-block cursor-pointer text-sm text-emerald-700 hover:underline">
-          Upload an image (JPEG, PNG, GIF or WebP, up to 5 MB)
+          Upload an image (JPEG, PNG, GIF or WebP, up to 4 MB)
           <input type="file" accept="image/jpeg,image/png,image/gif,image/webp" disabled={busy} className="sr-only" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
         </label>
         {preview && (
