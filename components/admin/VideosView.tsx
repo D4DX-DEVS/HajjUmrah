@@ -1,25 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
+import YtThumb from "../YtThumb";
 import { api, decodeEntities, nowLocal, slugify, youtubeId } from "./api";
-import { btn, field } from "./ui";
+import { Card, Field, IconPlus, IconX, Notice, btnPrimary, btnSecondary, input } from "./ui";
 
 type Video = { slug: string; title: string; date: string; youtubeId: string; image: null };
 
-export default function VideosView({ onError }: { onError: (e: unknown) => void }) {
+export default function VideosView({ onNotify, onError }: { onNotify: (text: string, href?: string) => void; onError: (e: unknown) => void }) {
   const [videos, setVideos] = useState<Video[] | null>(null);
+  const [saved, setSaved] = useState("");
   const [sha, setSha] = useState("");
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const [ok, setOk] = useState("");
 
   useEffect(() => {
     api<{ sha: string; videos: Video[] }>("videos")
       .then((r) => {
         setSha(r.sha);
         setVideos(r.videos);
+        setSaved(JSON.stringify(r.videos));
       })
       .catch((e) => {
         onError(e);
@@ -27,18 +29,28 @@ export default function VideosView({ onError }: { onError: (e: unknown) => void 
       });
   }, [onError]);
 
+  const dirty = videos != null && JSON.stringify(videos) !== saved;
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+
+  const needsSlug = !!title.trim() && !slugify(title);
+
   function add(e: React.FormEvent) {
     e.preventDefault();
     const id = youtubeId(url);
     if (!id) return setErr("That does not look like a YouTube link or id.");
     const s = slug.trim() || slugify(title);
-    if (!s) return setErr("Add a URL part (slug): the title has no English words.");
+    if (!s) return setErr("Add a URL (English letters): the title has no English words.");
+    if (videos?.some((v) => v.slug === s)) return setErr("A video with that URL already exists. Change the URL.");
     setErr("");
     setVideos([{ slug: s, title: title.trim(), date: nowLocal() + ":00", youtubeId: id, image: null }, ...(videos ?? [])]);
     setUrl("");
     setTitle("");
     setSlug("");
-    setOk("");
   }
 
   async function save() {
@@ -47,7 +59,8 @@ export default function VideosView({ onError }: { onError: (e: unknown) => void 
     try {
       const r = await api<{ sha: string; commitUrl: string }>("videos", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ sha, videos }) });
       setSha(r.sha);
-      setOk(r.commitUrl);
+      setSaved(JSON.stringify(videos));
+      onNotify("Videos saved. The site updates in about 2-3 minutes.", r.commitUrl);
     } catch (x) {
       onError(x);
       setErr((x as Error).message);
@@ -55,30 +68,60 @@ export default function VideosView({ onError }: { onError: (e: unknown) => void 
     setBusy(false);
   }
 
-  if (!videos) return <p className="text-neutral-500">{err || "Loading videos..."}</p>;
+  if (!videos) return <p className="py-20 text-center text-sm text-neutral-500">{err || "Loading videos..."}</p>;
   return (
-    <div className="space-y-5">
-      {err && <p role="alert" className="rounded bg-red-50 p-3 text-sm text-red-800">{err}</p>}
-      {ok && <p role="status" className="rounded bg-emerald-50 p-3 text-sm text-emerald-900">Saved to GitHub (<a href={ok} target="_blank" rel="noreferrer" className="underline">commit</a>). The site updates in about 2-3 minutes.</p>}
-      <form onSubmit={add} className="grid gap-3 rounded border border-black/10 bg-white p-4 sm:grid-cols-2">
-        <label className="text-sm font-medium">YouTube link<input value={url} onChange={(e) => setUrl(e.target.value)} required placeholder="https://www.youtube.com/watch?v=..." className={field} /></label>
-        <label className="text-sm font-medium">Title<input value={title} onChange={(e) => setTitle(e.target.value)} required className={field} /></label>
-        <label className="text-sm font-medium">URL part (optional)<input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder={slugify(title) || "needed for non-English titles"} className={field} /></label>
-        <div className="flex items-end"><button className={btn}>Add to list</button></div>
-      </form>
-      <ul className="divide-y divide-black/5 rounded border border-black/10 bg-white">
-        {videos.map((v) => (
-          <li key={v.slug} className="flex items-center gap-3 px-3 py-2">
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-medium">{decodeEntities(v.title)}</p>
-              <p className="text-xs text-neutral-500">{v.youtubeId} · {v.date.slice(0, 10)}</p>
-            </div>
-            <button onClick={() => confirm("Remove this video from the list?") && setVideos(videos.filter((x) => x !== v))} className="text-sm text-red-700 hover:underline">Remove</button>
-          </li>
-        ))}
-      </ul>
-      <button onClick={save} disabled={busy} className={btn}>{busy ? "Saving..." : "Save videos"}</button>
-      <p className="text-xs text-neutral-500">Add or remove entries above, then save once. Nothing changes on the site until you save.</p>
+    <div className="mx-auto max-w-6xl space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight">Videos <span className="text-base font-normal text-neutral-500">{videos.length}</span></h1>
+        <div className="flex items-center gap-3">
+          {dirty && <span className="text-xs text-amber-700">Unsaved changes</span>}
+          <button type="button" onClick={save} disabled={busy || !dirty} className={btnPrimary}>{busy ? "Saving..." : "Save videos"}</button>
+        </div>
+      </div>
+
+      {err && <Notice kind="error">{err}</Notice>}
+
+      <Card title="Add a video">
+        <form onSubmit={add} className="grid gap-3 sm:grid-cols-2">
+          <Field label="YouTube link"><input value={url} onChange={(e) => setUrl(e.target.value)} required placeholder="https://www.youtube.com/watch?v=..." className={input} /></Field>
+          <Field label="Title"><input value={title} onChange={(e) => setTitle(e.target.value)} required className={input} /></Field>
+          {needsSlug && (
+            <Field label="URL" hint="English lowercase letters and dashes. Needed because the title has no English words.">
+              <input value={slug} onChange={(e) => setSlug(e.target.value)} required className={input} />
+            </Field>
+          )}
+          <div className="flex items-end sm:col-span-2">
+            <button className={btnSecondary}><IconPlus /> Add to list</button>
+          </div>
+        </form>
+      </Card>
+
+      {videos.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-neutral-300 py-12 text-center text-sm text-neutral-500">No videos yet.</p>
+      ) : (
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {videos.map((v) => (
+            <li key={v.slug} className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
+              <YtThumb id={v.youtubeId} className="aspect-video w-full object-cover" />
+              <div className="flex items-start gap-2 p-3">
+                <div className="min-w-0 flex-1">
+                  <p className="line-clamp-2 font-medium leading-snug">{decodeEntities(v.title)}</p>
+                  <p className="mt-1 text-xs text-neutral-500">{v.date.slice(0, 10)}</p>
+                </div>
+                <button
+                  type="button"
+                  aria-label={`Remove ${decodeEntities(v.title)}`}
+                  onClick={() => confirm("Remove this video from the list?") && setVideos(videos.filter((x) => x !== v))}
+                  className="rounded-md p-1.5 text-neutral-400 hover:bg-red-50 hover:text-red-700"
+                >
+                  <IconX />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="text-xs text-neutral-500">Add or remove videos, then save once. Nothing changes on the site until you save.</p>
     </div>
   );
 }

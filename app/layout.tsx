@@ -3,6 +3,7 @@ import { Noto_Sans_Malayalam } from "next/font/google";
 import BackToTop from "@/components/BackToTop";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SiteChrome from "@/components/SiteChrome";
 import "./globals.css";
 
 const font = Noto_Sans_Malayalam({ subsets: ["malayalam", "latin"] });
@@ -19,10 +20,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ml" className={`${font.className} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-stone-50 text-neutral-900">
-        <Header />
+        <SiteChrome><Header /></SiteChrome>
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-10">{children}</main>
-        <Footer />
-        <BackToTop />
+        <SiteChrome>
+          <Footer />
+          <BackToTop />
+        </SiteChrome>
       </body>
     </html>
   );

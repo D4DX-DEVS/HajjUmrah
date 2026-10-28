@@ -23,9 +23,13 @@ export const decodeEntities = (s: string) =>
   s.replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&nbsp;/g, " ");
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-// plain text (blank line = new paragraph) becomes HTML; anything with tags is kept as written
-export const toHtml = (t: string) =>
-  /<\/?[a-z][\s\S]*?>/i.test(t) ? t.trim() : t.trim().split(/\n{2,}/).map((p) => `<p>${esc(p.trim()).replace(/\n/g, "<br>")}</p>`).join("\n");
+// plain text (blank line = new paragraph, single line break = <br>) to HTML; every character is escaped
+export const plainToHtml = (t: string) =>
+  t.trim() ? t.trim().split(/\n{2,}/).map((p) => `<p>${esc(p.trim()).replace(/\n/g, "<br>")}</p>`).join("\n") : "";
+
+// public address of the R2 bucket, for showing images that were uploaded there
+export const MEDIA = (process.env.NEXT_PUBLIC_MEDIA_URL ?? "").replace(/\/+$/, "");
+export const imageSrc = (path: string) => (path.startsWith("/uploads/") && MEDIA ? `${MEDIA}${path}` : path);
 
 export const safeDecode = (s: string) => {
   try { return decodeURIComponent(s); } catch { return s; }
