@@ -17,6 +17,8 @@ npm start       # serve the build
 3. Deploy. From then on every push to `main` deploys automatically, including the commits the admin makes.
 4. Domain: Settings → Domains → add `hajj.islamonlive.in`, then create the DNS record Vercel shows (a `CNAME` to `cname.vercel-dns.com`). DNS can stay where it is; it does not need to move to Cloudflare.
 
+Without the GitHub connection (step 1 needs a GitHub "Login Connection" on the Vercel account), deploy from this folder with `npx vercel@latest deploy --prod`. The project is `d4-dx2/hajj-next`; its production address is https://hajj-next.vercel.app.
+
 Notes: images are served as the original files (`images.unoptimized`, so no Vercel image quota is used). Vercel's free Hobby plan is for non-commercial use; check their terms for your case. Function request bodies are limited to 4.5 MB, hence the 4 MB image upload limit in the admin.
 
 ## Environment variables
