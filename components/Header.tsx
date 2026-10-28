@@ -10,8 +10,8 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-black/5 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2">
-        <Link href="/" aria-label="Hajj and Umrah home" className="shrink-0">
-          <Image src="/uploads/2022/06/logo-hajj.png" alt="Hajj and Umrah" width={300} height={112} priority className="h-11 w-auto" />
+        <Link href="/" aria-label="islamonlive, Hajj and Umrah home" className="shrink-0">
+          <Image src="/islamonlive-logo.png" alt="islamonlive" width={298} height={81} priority className="h-10 w-auto" />
         </Link>
         <form action="/search" role="search" className="order-2 ml-auto lg:order-3">
           <input

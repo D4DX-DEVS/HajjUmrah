@@ -70,7 +70,9 @@ export default function AdminApp() {
     <div>
       <header className="sticky top-0 z-30 -mx-4 -mt-6 border-b border-neutral-200 bg-white/90 backdrop-blur sm:-mt-10">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4">
-          <span className="mr-2 text-base font-bold tracking-tight">Admin</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/islamonlive-logo.png" alt="islamonlive" width={298} height={81} className="h-8 w-auto" />
+          <span className="mr-2 text-sm font-semibold text-neutral-500">Admin</span>
           <nav aria-label="Admin" className="flex gap-1">{tab("posts", "Posts")}{tab("videos", "Videos")}</nav>
           <div className="ml-auto flex items-center gap-4">
             <a href="/" target="_blank" rel="noreferrer" className={`${btnLink} hidden items-center gap-1 sm:inline-flex`}>View site <IconExternal /></a>

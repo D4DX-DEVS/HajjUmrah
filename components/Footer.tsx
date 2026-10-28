@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { allCategories } from "@/lib/data";
 
@@ -8,6 +9,7 @@ export default function Footer() {
     <footer className="mt-12 border-t border-black/5 bg-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm text-neutral-600 sm:grid-cols-3">
         <div>
+          <Image src="/islamonlive-logo.png" alt="islamonlive" width={298} height={81} className="mb-3 h-9 w-auto" />
           <p className="font-semibold text-neutral-900">Hajj and Umrah</p>
           <p className="mt-2 max-w-xs">Articles, fatwas, fiqh, history and rituals of Hajj and Umrah in Malayalam.</p>
         </div>
