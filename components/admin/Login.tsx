@@ -26,8 +26,6 @@ export default function Login({ onDone }: { onDone: () => void }) {
     <div className="flex min-h-[70vh] items-center justify-center">
       <form onSubmit={submit} className="w-full max-w-sm space-y-5 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
         <div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/islamonlive-logo.png" alt="islamonlive" width={298} height={81} className="mb-4 h-10 w-auto" />
           <h1 className="text-2xl font-bold tracking-tight">Admin</h1>
           <p className="mt-1 text-sm text-neutral-500">Sign in to manage posts and videos.</p>
         </div>
