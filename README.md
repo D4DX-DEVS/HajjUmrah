@@ -44,6 +44,8 @@ How it works: the page is static; `/api/admin/*` (`lib/server/admin.ts`) checks 
 Setup: create the GitHub token and set `ADMIN_PASSWORD` / `GITHUB_TOKEN` in Vercel, run `npm run db:migrate` once (adds the `admin_login_attempts` table), then open `https://<your-site>/admin`.
 
 Notes:
+- The admin hides the public header and footer. The editor has a Posts back link (the browser Back button works too), a Ctrl+S shortcut and an "Unsaved changes" warning.
+- New posts are written as plain text (blank line = new paragraph); "Edit as HTML" switches to raw HTML, and imported posts open in HTML mode.
 - Saving an existing post keeps its URL if you leave the slug alone, keeps extra categories (the "Also show in" boxes) and the original time of day.
 - The admin's list is the last published version of the site; a post you just saved appears after the rebuild.
 - Post bodies are cleaned on save: scripts, event handlers, `javascript:`/`data:` links and any iframe except YouTube/Spotify are removed. This is a safety net, not a full HTML sanitizer, so keep the password private.
