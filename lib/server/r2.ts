@@ -15,10 +15,13 @@ export async function r2Exists(key: string) {
 }
 
 export async function r2Put(key: string, body: ArrayBuffer, contentType: string) {
-  const res = await client().fetch(objectUrl(key), {
-    method: "PUT",
-    body,
-    headers: { "content-type": contentType, "cache-control": "public, max-age=31536000, immutable" },
-  });
+  const put = () =>
+    client().fetch(objectUrl(key), {
+      method: "PUT",
+      body,
+      headers: { "content-type": contentType, "content-length": String(body.byteLength), "cache-control": "public, max-age=31536000, immutable" },
+    });
+  let res = await put();
+  if (res.status === 411 || res.status >= 500) res = await put(); // seen once: a transient 411 from R2
   if (!res.ok) throw new Error(`R2 PUT failed (${res.status})`);
 }
