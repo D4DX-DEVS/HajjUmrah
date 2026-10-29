@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Hero from "@/components/Hero";
+import JsonLd from "@/components/JsonLd";
 import PostCard from "@/components/PostCard";
 import PostRow from "@/components/PostRow";
 import SectionHeader from "@/components/SectionHeader";
 import YtThumb from "@/components/YtThumb";
-import { allCategories, allPosts, allVideos, decode } from "@/lib/data";
+import { SITE, allCategories, allPosts, allVideos, decode } from "@/lib/data";
 
 export const metadata = { alternates: { canonical: "/" } };
 
@@ -16,6 +17,10 @@ export default function Home() {
   return (
     <div className="space-y-16">
       <h1 className="sr-only">Hajj and Umrah</h1>
+      <JsonLd data={{ "@context": "https://schema.org", "@graph": [
+        { "@type": "WebSite", "@id": SITE + "/#website", url: SITE + "/", name: "Hajj and Umrah", inLanguage: "ml", publisher: { "@id": SITE + "/#org" } },
+        { "@type": "Organization", "@id": SITE + "/#org", name: "islamonlive", url: "https://islamonlive.in" },
+      ] }} />
       <Hero posts={hero} />
       {sections.map((s) => {
         const cat = allCategories.find((c) => c.slug === s)!;

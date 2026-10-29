@@ -3,7 +3,7 @@ import PageTitle from "@/components/PageTitle";
 import SearchResults from "@/components/SearchResults";
 import { allPosts, decode, postHref } from "@/lib/data";
 
-export const metadata = { title: "Search" };
+export const metadata = { title: "Search", description: "Search Hajj and Umrah articles, fatwas and videos in Malayalam.", robots: { index: false, follow: true } };
 
 const index = allPosts.map((p) => ({ t: decode(p.title), e: decode(p.excerpt), h: postHref(p) }));
 

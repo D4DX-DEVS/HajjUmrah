@@ -1,6 +1,6 @@
 import PageTitle from "@/components/PageTitle";
 
-export const metadata = { title: "About" };
+export const metadata = { title: "About", description: "About Hajj and Umrah, a Malayalam-language resource from islamonlive with articles, fatwas, fiqh, history and videos on Hajj and Umrah.", alternates: { canonical: "/about" } };
 
 export default function About() {
   return (

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PageTitle from "@/components/PageTitle";
 
-export const metadata = { title: "Privacy & Policy" };
+export const metadata = { title: "Privacy & Policy", description: "How hajj.islamonlive.in handles the information you send through the contact form. The site has no accounts, comments, ads or tracking cookies.", alternates: { canonical: "/privacy-policy" } };
 
 export default function Privacy() {
   return (

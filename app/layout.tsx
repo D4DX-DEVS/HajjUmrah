@@ -12,7 +12,7 @@ const display = Noto_Serif_Malayalam({ subsets: ["malayalam", "latin"], weight: 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hajj.islamonlive.in"),
   title: { default: "Hajj and Umrah", template: "%s | Hajj and Umrah" },
-  description: "Hajj and Umrah articles, fatwas, fiqh, history and rituals.",
+  description: "Malayalam articles, fatwas, fiqh, history and rituals of Hajj and Umrah from islamonlive.",
   openGraph: { siteName: "Hajj and Umrah", type: "website", locale: "ml_IN" },
   icons: { icon: "/uploads/2022/06/cropped-icon-192x192.png", apple: "/uploads/2022/06/cropped-icon-180x180.png" },
 };

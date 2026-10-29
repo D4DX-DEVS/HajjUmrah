@@ -3,7 +3,7 @@ import PageTitle from "@/components/PageTitle";
 import VideoPlayer from "@/components/VideoPlayer";
 import { allVideos, decode } from "@/lib/data";
 
-export const metadata = { title: "Videos" };
+export const metadata = { title: "Videos", description: "Malayalam videos on preparing for Hajj and Umrah, its history, and a study guide.", alternates: { canonical: "/videos" } };
 
 export default function Videos() {
   return (

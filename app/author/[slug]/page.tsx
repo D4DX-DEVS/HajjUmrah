@@ -7,7 +7,9 @@ export const generateStaticParams = () => authors.map((a) => ({ slug: a.slug }))
 
 export async function generateMetadata({ params }: PageProps<"/author/[slug]">) {
   const { slug } = await params;
-  return { title: authors.find((a) => a.slug === slug)?.name, alternates: { canonical: `/author/${slug}` } };
+  const name = authors.find((a) => a.slug === slug)?.name;
+  const bio = authorBio(slug)?.replace(/s+/g, " ").trim();
+  return { title: name, description: bio ? bio.slice(0, 155) : `Posts by ${name} on Hajj and Umrah in Malayalam (${postsBy(slug).length}).`, alternates: { canonical: `/author/${slug}` } };
 }
 
 export default async function AuthorPage({ params }: PageProps<"/author/[slug]">) {

@@ -6,7 +6,7 @@ export const generateStaticParams = () => allTags.map((t) => ({ slug: t.slug }))
 
 export async function generateMetadata({ params }: PageProps<"/tag/[slug]">) {
   const tag = getTag((await params).slug);
-  return { title: `#${tag?.name}`, alternates: { canonical: `/tag/${tag?.slug}` } };
+  return { title: `#${tag?.name}`, description: `${postsTagged(tag?.slug ?? "").length} Malayalam posts tagged ${tag?.name} on Hajj and Umrah from islamonlive.`, alternates: { canonical: `/tag/${tag?.slug}` } };
 }
 
 export default async function TagPage({ params }: PageProps<"/tag/[slug]">) {
