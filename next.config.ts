@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
         ],
       },
+      // Uploaded images never change under the same name: cache them for a year.
+      { source: "/uploads/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
+      // Pages are static. The CDN keeps them until the next deploy (a deploy purges it); browsers reuse them for a minute.
+      { source: "/((?!api|_next|uploads).*)", headers: [{ key: "Cache-Control", value: "public, max-age=60, s-maxage=31536000, stale-while-revalidate=86400" }] },
     ];
   },
   // WordPress served categories at /category/<cat>/; post, tag and author URLs are unchanged.
