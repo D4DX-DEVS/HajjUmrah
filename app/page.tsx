@@ -14,7 +14,7 @@ export default function Home() {
   const hero = allPosts.slice(0, 3);
   const seen = new Set(hero.map((p) => p.id)); // each post appears once on the page
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       <h1 className="sr-only">Hajj and Umrah</h1>
       <Hero posts={hero} />
       {sections.map((s) => {
@@ -32,7 +32,7 @@ export default function Home() {
             <div className="grid gap-8 lg:grid-cols-5">
               <div className={rest.length ? "lg:col-span-3" : "lg:col-span-5"}><PostCard post={lead} lead wide={!rest.length} /></div>
               {rest.length > 0 && (
-                <div className="flex flex-col divide-y divide-black/5 lg:col-span-2">
+                <div className="flex flex-col divide-y divide-hairline lg:col-span-2">
                   {rest.map((p) => <PostRow key={p.id} post={p} />)}
                 </div>
               )}
@@ -44,9 +44,9 @@ export default function Home() {
         <SectionHeader title="Videos" href="/videos" />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {allVideos.filter((v) => v.youtubeId).slice(0, 4).map((v) => (
-            <Link key={v.slug} href="/videos" className="group text-sm font-medium">
-              <YtThumb id={v.youtubeId!} className="mb-2 aspect-video w-full rounded-xl object-cover transition group-hover:opacity-90" />
-              <span className="line-clamp-2 group-hover:text-emerald-700">{decode(v.title)}</span>
+            <Link key={v.slug} href="/videos" className="group font-display text-base font-bold leading-snug">
+              <YtThumb id={v.youtubeId!} className="mb-3 aspect-video w-full object-cover transition duration-500 group-hover:opacity-90" />
+              <span className="sweep line-clamp-2 pb-0.5">{decode(v.title)}</span>
             </Link>
           ))}
         </div>

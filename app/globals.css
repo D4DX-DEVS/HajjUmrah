@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
+/* Kiswa: the black cloth and gold thread of the Kaaba, on ihram white. */
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-serif-ml), "Noto Serif Malayalam", Georgia, serif;
+  --color-ink: #12100d;
+  --color-ink-soft: #1c1914;
+  --color-gold: #b48a3c;
+  --color-gold-deep: #8c6a25;
+  --color-gold-light: #e2c079;
+  --color-ihram: #fbfaf7;
+  --color-hairline: #e6e2d8;
+  --color-madinah: #0a5c46;
+  --color-madinah-deep: #07463a;
+  --color-madinah-wash: #e7f0ec;
 }
 
+body { overflow-x: clip; }
 html { color-scheme: light; scroll-behavior: smooth; font-size: 106.25%; }
-::selection { background: #a7f3d0; }
-:focus-visible { outline: 2px solid #059669; outline-offset: 2px; }
+::selection { background: var(--color-gold-light); color: var(--color-ink); }
+:focus-visible { outline: 2px solid var(--color-gold-deep); outline-offset: 2px; }
+
+/* Links that write a gold line under themselves on hover. */
+.sweep { background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 2px no-repeat; transition: background-size 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.group:hover .sweep, .sweep:hover { background-size: 100% 2px; }
+
+/* The one orchestrated moment: the home hero. */
+@keyframes rise { from { opacity: 0; transform: translateY(1.1rem); } to { opacity: 1; transform: none; } }
+@keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes drift { from { transform: scale(1.02); } to { transform: scale(1.12); } }
+.hero-img { animation: drift 24s ease-out both; }
+.rise { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 120ms + 150ms); }
+.rule { transform-origin: left; animation: draw 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: 0.1s; }
+
+/* Section rules draw as they scroll into view, and the article gets a reading line (browsers without scroll timelines skip both). */
+@supports (animation-timeline: view()) {
+  .rule-view { transform-origin: left; animation: draw linear both; animation-timeline: view(); animation-range: entry 10% entry 70%; }
+  .progress { position: fixed; inset: 0 0 auto 0; z-index: 40; height: 3px; transform-origin: left; background: var(--color-gold); animation: draw linear both; animation-timeline: scroll(root); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { transition: none !important; }
+  * { transition: none !important; animation: none !important; }
 }
 
 .wp-content { font-size: 1.125rem; line-height: 2; color: #262626; overflow-wrap: anywhere; }
 .wp-content > * + * { margin-top: 1.25rem; }
-.wp-content h2, .wp-content h3, .wp-content h4 { font-weight: 700; line-height: 1.4; margin-top: 2rem; }
-.wp-content h2 { font-size: 1.5rem; }
-.wp-content h3 { font-size: 1.25rem; }
-.wp-content a { color: #047857; text-decoration: underline; text-underline-offset: 3px; }
-.wp-content img, .wp-content iframe, .wp-content video { max-width: 100%; height: auto; border-radius: 0.75rem; }
+.wp-content h2, .wp-content h3, .wp-content h4 { font-family: var(--font-display); font-weight: 800; line-height: 1.4; margin-top: 2.25rem; }
+.wp-content h2 { font-size: 1.625rem; }
+.wp-content h3 { font-size: 1.3rem; }
+.wp-content a { color: var(--color-madinah); text-decoration: underline; text-decoration-color: var(--color-gold); text-underline-offset: 4px; text-decoration-thickness: 2px; }
+.wp-content img, .wp-content iframe, .wp-content video { max-width: 100%; height: auto; border-radius: 0.25rem; }
 .wp-content iframe { width: 100%; aspect-ratio: 16 / 9; }
 .wp-content ul { list-style: disc; padding-left: 1.5rem; }
 .wp-content ol { list-style: decimal; padding-left: 1.5rem; }
-.wp-content blockquote { border-left: 4px solid #047857; padding-left: 1rem; color: #404040; }
+.wp-content blockquote { border-left: 3px solid var(--color-gold); padding-left: 1.25rem; font-family: var(--font-display); font-weight: 600; color: var(--color-ink-soft); }

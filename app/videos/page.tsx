@@ -14,7 +14,7 @@ export default function Videos() {
           <div key={v.slug}>
             <VideoPlayer id={v.youtubeId!} title={decode(v.title)} />
             <h2 className="mt-3 font-semibold leading-snug">
-              <Link href={`/video/${v.slug}`} className="hover:text-emerald-700">{decode(v.title)}</Link>
+              <Link href={`/video/${v.slug}`} className="hover:text-madinah">{decode(v.title)}</Link>
             </h2>
           </div>
         ))}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_Malayalam } from "next/font/google";
+import { Noto_Sans_Malayalam, Noto_Serif_Malayalam } from "next/font/google";
 import BackToTop from "@/components/BackToTop";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,6 +7,7 @@ import SiteChrome from "@/components/SiteChrome";
 import "./globals.css";
 
 const font = Noto_Sans_Malayalam({ subsets: ["malayalam", "latin"] });
+const display = Noto_Serif_Malayalam({ subsets: ["malayalam", "latin"], weight: ["600", "700", "800", "900"], variable: "--font-serif-ml" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hajj.islamonlive.in"),
@@ -18,10 +19,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ml" className={`${font.className} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-stone-50 text-neutral-900">
+    <html lang="ml" className={`${font.className} ${display.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col bg-ihram text-ink">
         <SiteChrome>
-          <a href="#main" className="sr-only rounded-lg bg-emerald-700 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:px-4 focus:py-2 focus:left-3 focus:top-3 focus:z-50">Skip to content</a>
+          <a href="#main" className="sr-only rounded-lg bg-ink text-sm font-semibold text-gold-light focus:not-sr-only focus:fixed focus:px-4 focus:py-2 focus:left-3 focus:top-3 focus:z-50">Skip to content</a>
           <Header />
         </SiteChrome>
         <main id="main" tabIndex={-1} className="mx-auto outline-none w-full max-w-6xl flex-1 px-4 py-6 sm:py-10">{children}</main>

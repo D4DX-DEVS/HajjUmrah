@@ -7,7 +7,7 @@ export default function YtThumb({ id, className }: { id: string; className?: str
   const check = (img: HTMLImageElement | null) => {
     if (img?.complete && img.naturalWidth <= 120) setBad(true);
   };
-  if (bad) return <div aria-hidden className={`${className} bg-emerald-50`} />;
+  if (bad) return <div aria-hidden className={`${className} bg-madinah-wash`} />;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
