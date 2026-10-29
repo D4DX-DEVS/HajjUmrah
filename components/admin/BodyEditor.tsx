@@ -10,7 +10,7 @@ export default function BodyEditor({ value, mode, onChange, onMode }: { value: s
   const [tab, setTab] = useState<"write" | "preview">("write");
   const html = mode === "html" ? value : plainToHtml(value);
   const tabBtn = (t: "write" | "preview", label: string) => (
-    <button type="button" onClick={() => setTab(t)} aria-pressed={tab === t} className={`rounded-md px-3 py-1 text-sm font-medium ${tab === t ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-600 hover:text-neutral-900"}`}>
+    <button type="button" onClick={() => setTab(t)} aria-pressed={tab === t} className={`rounded-md px-3.5 py-2 text-sm font-medium ${tab === t ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-600 hover:text-neutral-900"}`}>
       {label}
     </button>
   );

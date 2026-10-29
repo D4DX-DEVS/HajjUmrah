@@ -20,7 +20,7 @@ export default function TagInput({ value, onChange, suggestions }: { value: stri
           {value.map((t) => (
             <li key={t} className="inline-flex items-center gap-1 rounded-full bg-emerald-50 py-0.5 pl-2.5 pr-1 text-sm text-emerald-900">
               {t}
-              <button type="button" onClick={() => onChange(value.filter((v) => v !== t))} aria-label={`Remove tag ${t}`} className="rounded-full p-0.5 text-emerald-700 hover:bg-emerald-100">
+              <button type="button" onClick={() => onChange(value.filter((v) => v !== t))} aria-label={`Remove tag ${t}`} className="-my-1.5 rounded-full p-2 text-emerald-700 hover:bg-emerald-100">
                 <IconX className="h-3 w-3" />
               </button>
             </li>

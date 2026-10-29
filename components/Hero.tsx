@@ -10,9 +10,9 @@ function Tile({ post, big }: { post: Post; big?: boolean }) {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-6">
-        <span className="inline-block rounded bg-emerald-600 px-2 py-0.5 text-xs font-medium uppercase tracking-wide">{getCategory(post.category)?.name}</span>
+        <span className="inline-block rounded bg-emerald-700 px-2 py-0.5 text-sm font-medium">{getCategory(post.category)?.name}</span>
         <h2 className={`mt-1 font-bold leading-snug ${big ? "text-xl sm:text-3xl" : "line-clamp-3 text-lg"}`}>{decode(post.title)}</h2>
-        <p className="mt-1 text-xs text-white/70">{post.author.name} · {fmtDate(post.date)}</p>
+        <p className="mt-1 text-sm text-white/80">{post.author.name} · {fmtDate(post.date)}</p>
       </div>
     </Link>
   );

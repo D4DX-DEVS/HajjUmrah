@@ -31,7 +31,7 @@ export default function Footer() {
           </ul>
         </nav>
       </div>
-      <p className="border-t border-black/5 py-4 text-center text-xs text-neutral-500">© islamonlive.in, 2026</p>
+      <p className="border-t border-black/5 py-4 text-center text-sm text-neutral-600">© islamonlive.in, 2026</p>
     </footer>
   );
 }

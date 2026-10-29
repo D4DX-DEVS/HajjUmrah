@@ -20,8 +20,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ml" className={`${font.className} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-stone-50 text-neutral-900">
-        <SiteChrome><Header /></SiteChrome>
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-10">{children}</main>
+        <SiteChrome>
+          <a href="#main" className="sr-only rounded-lg bg-emerald-700 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:px-4 focus:py-2 focus:left-3 focus:top-3 focus:z-50">Skip to content</a>
+          <Header />
+        </SiteChrome>
+        <main id="main" tabIndex={-1} className="mx-auto outline-none w-full max-w-6xl flex-1 px-4 py-6 sm:py-10">{children}</main>
         <SiteChrome>
           <Footer />
           <BackToTop />

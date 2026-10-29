@@ -21,8 +21,8 @@ export default function ContactForm() {
   if (state === "ok") return <p className="rounded bg-emerald-50 p-4 text-emerald-800">Thank you, your message has been sent.</p>;
   return (
     <form onSubmit={submit} className="space-y-4">
-      <label className="block text-sm font-medium">Name<input name="name" required maxLength={100} className={field} /></label>
-      <label className="block text-sm font-medium">Email<input name="email" type="email" required maxLength={200} className={field} /></label>
+      <label className="block text-sm font-medium">Name<input name="name" autoComplete="name" required maxLength={100} className={field} /></label>
+      <label className="block text-sm font-medium">Email<input name="email" type="email" autoComplete="email" required maxLength={200} className={field} /></label>
       <label className="block text-sm font-medium">Message<textarea name="message" required maxLength={5000} rows={6} className={field} /></label>
       <input name="website" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
       <button disabled={state === "sending"} className="rounded bg-emerald-700 px-5 py-2 font-medium text-white disabled:opacity-60">

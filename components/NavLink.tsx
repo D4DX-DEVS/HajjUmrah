@@ -9,7 +9,7 @@ export default function NavLink({ href, children }: { href: string; children: Re
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`whitespace-nowrap rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors ${
+      className={`whitespace-nowrap rounded-full px-3 py-2.5 text-sm font-medium transition-colors ${
         active ? "bg-emerald-700 text-white" : "text-neutral-700 hover:bg-emerald-50 hover:text-emerald-800"
       }`}
     >

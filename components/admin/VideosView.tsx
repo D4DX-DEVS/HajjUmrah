@@ -112,7 +112,7 @@ export default function VideosView({ onNotify, onError }: { onNotify: (text: str
                   type="button"
                   aria-label={`Remove ${decodeEntities(v.title)}`}
                   onClick={() => confirm("Remove this video from the list?") && setVideos(videos.filter((x) => x !== v))}
-                  className="rounded-md p-1.5 text-neutral-400 hover:bg-red-50 hover:text-red-700"
+                  className="-m-1 rounded-md p-2.5 text-neutral-400 hover:bg-red-50 hover:text-red-700"
                 >
                   <IconX />
                 </button>
