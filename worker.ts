@@ -154,9 +154,14 @@ async function warm(env: Env, ctx: ExecutionContext) {
 }
 
 // Search engines must only index the real domain. Every other address that serves this Worker (workers.dev, a staging
-// name) answers robots.txt with "disallow all" and marks pages noindex. The domain forwarder sets x-forwarded-host.
+// name) answers robots.txt with "disallow all" and marks pages noindex. Real-domain traffic is recognised by the Host header,
+// by x-forwarded-host (a forwarding Worker should send it), or by the cf-worker header Cloudflare adds to requests that
+// come from a Worker in the site's own zone (a forwarder that sends neither of the first two).
 function offDomain(request: Request, env: Env, url: URL) {
-  return (request.headers.get("x-forwarded-host") ?? url.host) !== new URL(env.SITE_URL).host;
+  const site = new URL(env.SITE_URL).host;
+  if ((request.headers.get("x-forwarded-host") ?? url.host) === site) return false;
+  const zone = request.headers.get("cf-worker");
+  return !(zone && (site === zone || site.endsWith("." + zone)));
 }
 
 async function route(request: Request, env: Env, ctx: ExecutionContext, url: URL): Promise<Response> {
