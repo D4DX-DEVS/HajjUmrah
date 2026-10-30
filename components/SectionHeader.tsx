@@ -1,13 +1,33 @@
 import Link from "next/link";
 
-export default function SectionHeader({ title, href }: { title: string; href?: string }) {
+// The rub el hizb (two overlapping squares), used as the section mark.
+function Mark({ className }: { className?: string }) {
   return (
-    <div className="mb-7 flex items-end justify-between gap-4">
-      <div>
-        <h2 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">{title}</h2>
-        <span className="rule-view mt-2 block h-0.5 w-16 bg-gold" aria-hidden />
+    <svg viewBox="0 0 40 40" className={className} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+      <rect x="9" y="9" width="22" height="22" />
+      <rect x="9" y="9" width="22" height="22" transform="rotate(45 20 20)" />
+      <circle cx="20" cy="20" r="3" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export default function SectionHeader({ title, blurb, href, dark }: { title: string; blurb?: string; href?: string; dark?: boolean }) {
+  return (
+    <div className="mb-8 flex items-end justify-between gap-4">
+      <div className="flex items-center gap-4">
+        {blurb && <Mark className="h-11 w-11 shrink-0 text-gold" />}
+        <div>
+          <h2 className={`font-display text-2xl font-extrabold tracking-tight sm:text-3xl ${dark ? "text-white" : ""}`}>{title}</h2>
+          {blurb && <p className={`mt-1 text-sm ${dark ? "text-white/70" : "text-neutral-600"}`}>{blurb}</p>}
+          <span className="rule-view mt-2 block h-0.5 w-16 bg-gold" aria-hidden />
+        </div>
       </div>
-      {href && <Link href={href} className="group -my-2 flex items-center gap-1.5 py-2 text-sm font-semibold text-madinah"><span className="sweep pb-0.5">View all</span><span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span></Link>}
+      {href && (
+        <Link href={href} className={`group -my-2 flex shrink-0 items-center gap-1.5 py-2 text-sm font-semibold ${dark ? "text-gold-light" : "text-madinah"}`}>
+          <span className="sweep pb-0.5">View all</span>
+          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </Link>
+      )}
     </div>
   );
 }

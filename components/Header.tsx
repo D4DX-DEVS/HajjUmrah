@@ -13,14 +13,17 @@ export default function Header() {
         <Link href="/" aria-label="Hajj and Umrah home" className="shrink-0">
           <Image src="/uploads/2022/06/logo-hajj.png" alt="Hajj and Umrah" width={300} height={112} priority className="h-11 w-auto" />
         </Link>
-        <form action="/search" role="search" className="order-2 ml-auto xl:order-3">
+        <form action="/search" role="search" className="order-2 ml-auto flex xl:order-3">
           <input
             name="q"
             type="search"
             placeholder="Search"
             aria-label="Search"
-            className="w-32 rounded-full border border-hairline bg-white px-4 py-1.5 text-sm outline-none transition-all focus:border-gold focus:ring-2 focus:ring-gold/30 sm:w-36 sm:focus:w-48"
+            className="w-32 rounded-l-full border border-r-0 border-hairline bg-white px-4 py-1.5 text-sm outline-none transition-all focus:border-gold sm:w-40 sm:focus:w-52"
           />
+          <button aria-label="Search" className="flex w-11 items-center justify-center rounded-r-full bg-ink text-gold-light transition-colors hover:bg-ink-soft">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          </button>
         </form>
         <nav aria-label="Main" className="order-last -mx-4 flex w-[calc(100%+2rem)] gap-1 overflow-x-auto px-4 [scrollbar-width:none] max-md:pr-10 max-md:[mask-image:linear-gradient(to_right,black_calc(100%-2.5rem),transparent)] xl:order-2 xl:mx-0 xl:w-auto xl:flex-1 xl:justify-center xl:overflow-visible">
           <NavLink href="/">Home</NavLink>
