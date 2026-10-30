@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Malayalam, Noto_Serif_Malayalam } from "next/font/google";
 import BackToTop from "@/components/BackToTop";
 import Header from "@/components/Header";
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   openGraph: { siteName: "Hajj and Umrah", type: "website", locale: "ml_IN" },
   icons: { icon: "/uploads/2022/06/cropped-icon-192x192.png", apple: "/uploads/2022/06/cropped-icon-180x180.png" },
 };
+
+export const viewport: Viewport = { themeColor: "#12100d" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
