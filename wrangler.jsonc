@@ -12,6 +12,8 @@
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "hajjumra" }],
   "vars": {
     "SITE_URL": "https://hajj.islamonlive.in",
+    // "1": every page is noindex and robots.txt disallows everything (visitors still arrive from the links on islamonlive.in). Remove it, or set "0", to open the site to search engines.
+    "NOINDEX": "1",
     // public address of the bucket, used for image previews in the admin
     "MEDIA_URL": "https://pub-c7884d3013394bc9948f3795c715c94a.r2.dev"
   },

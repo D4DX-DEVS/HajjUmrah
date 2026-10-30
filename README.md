@@ -25,7 +25,7 @@ Worker `hajj-next` (`wrangler.jsonc`, entry `worker.ts`). **Always deploy with `
 | Setting | Where |
 |---|---|
 | `ADMIN_PASSWORD`, `CONTACT_WEBHOOK_URL` | Worker secrets |
-| `SITE_URL`, `MEDIA_URL` | `wrangler.jsonc` vars |
+| `SITE_URL`, `MEDIA_URL`, `NOINDEX` | `wrangler.jsonc` vars. `NOINDEX` is `"1"` for now: the site is noindex and `robots.txt` disallows all, until it is meant to be found by search. Set it to `"0"` and deploy to open it |
 | `NEXT_PUBLIC_MEDIA_URL` | **Build time**, in `.env`. Public address of the R2 bucket, no trailing slash; when set, post images load from `<url>/uploads/...` |
 
 ## Page cache (stays inside the free plan)
@@ -53,7 +53,7 @@ Notes:
 
 ## Content
 
-`content/*.json` is only the seed for `scripts/seed-d1.mjs` (the original WordPress export). **D1 is the source of truth**: edits in the admin never reach those files, and `scripts/add-post.mjs` (which wrote them) is no longer used. `scripts/export.mjs` and `scripts/sync-extras.mjs` were the one-off WordPress import; do not re-run them.
+`content/*.json` is only the seed for `scripts/seed-d1.mjs` (the original WordPress export). **D1 is the source of truth**: edits in the admin never reach those files,. `scripts/export.mjs` and `scripts/sync-extras.mjs` were the one-off WordPress import; do not re-run them.
 
 ## Contact messages (D1)
 

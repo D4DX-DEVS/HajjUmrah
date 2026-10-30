@@ -22,6 +22,7 @@ const TEXT = /^(text\/(html|plain|xml|x-component)|application\/(xml|rss\+xml))/
 type Env = {
   MEDIA: R2Bucket;
   ASSETS: Fetcher;
+  NOINDEX?: string;
   VERSION?: { timestamp: string };
   WORKER_SELF_REFERENCE?: Fetcher;
   SITE_URL: string;
@@ -177,7 +178,8 @@ const worker = {
     const key = renderKey(env);
     if (key && request.headers.get("x-render") === key) return openNext.fetch(request, env, ctx); // the internal render call
     const url = new URL(request.url);
-    if (!offDomain(request, env, url)) return route(request, env, ctx, url);
+    // NOINDEX=1 (wrangler.jsonc) hides the whole site from search engines until it is meant to be found
+    if (env.NOINDEX !== "1" && !offDomain(request, env, url)) return route(request, env, ctx, url);
     if (url.pathname === "/robots.txt") return new Response("User-agent: *\nDisallow: /\n", { headers: { "content-type": "text/plain; charset=utf-8" } });
     const original = await route(request, env, ctx, url);
     const res = new Response(original.body, original); // copy, so the headers can be changed
