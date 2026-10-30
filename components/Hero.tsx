@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 import { decode, fmtDate, getCategory, postHref, type Post } from "@/lib/data";
 
 // Staggered entrance: --i orders the lines (category, title, meta).
@@ -7,9 +8,9 @@ function Tile({ post, big }: { post: Post; big?: boolean }) {
   const delay = (i: number) => ({ "--i": i }) as React.CSSProperties;
   return (
     <Link href={postHref(post)} className={`group relative block overflow-hidden bg-ink-soft ring-1 ring-gold/25 ${big ? "min-h-[26rem] sm:min-h-[34rem] lg:col-span-2 lg:row-span-2 lg:min-h-[36rem]" : "min-h-52"}`}>
-      {post.image && (
+      {post.image ? (
         <Image src={post.image} alt="" fill priority={big} sizes={big ? "(min-width:1024px) 66vw, 100vw" : "(min-width:1024px) 33vw, 100vw"} className={`object-cover opacity-90 transition duration-700 group-hover:opacity-100 ${big ? "hero-img" : "group-hover:scale-105"}`} />
-      )}
+      ) : <ImagePlaceholder dark />}
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/5" />
       <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-8">
         <span className="rise inline-block text-sm font-semibold text-gold-light" style={delay(0)}>{getCategory(post.category)?.name}</span>

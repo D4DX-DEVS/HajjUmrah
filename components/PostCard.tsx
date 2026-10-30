@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 import { decode, fmtDate, getCategory, postHref, type Post } from "@/lib/data";
 
 // lead: bigger title; wide: image beside text on large screens (section with no side list)
@@ -12,9 +13,9 @@ export default function PostCard({ post, lead, wide, as: H = "h3" }: { post: Pos
         aria-hidden
         className={`relative block overflow-hidden bg-madinah-wash ${lead ? "aspect-video" : "aspect-[16/10]"} ${wide ? "lg:w-1/2 lg:shrink-0" : ""}`}
       >
-        {post.image && (
+        {post.image ? (
           <Image src={post.image} alt="" fill sizes={lead ? "(min-width:1024px) 640px, 100vw" : "(min-width:1024px) 360px, (min-width:640px) 50vw, 100vw"} className="object-cover transition duration-700 ease-out group-hover:scale-105" />
-        )}
+      ) : <ImagePlaceholder />}
       </Link>
       <div className="mt-3 flex flex-1 flex-col gap-1.5">
         <p className="text-sm font-semibold text-gold-deep">{getCategory(post.category)?.name}</p>

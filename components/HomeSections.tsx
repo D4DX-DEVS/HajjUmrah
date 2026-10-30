@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 import PostCard from "@/components/PostCard";
 import PostRow from "@/components/PostRow";
 import SectionHeader from "@/components/SectionHeader";
@@ -31,7 +32,7 @@ export function Band({ kind, children }: { kind: keyof typeof tone; children: Re
 function Pic({ post, sizes, className = "" }: { post: Post; sizes: string; className?: string }) {
   return (
     <span className={`${className.includes("absolute") ? "" : "relative"} block overflow-hidden bg-madinah-wash ${className}`}>
-      {post.image && <Image src={post.image} alt="" fill sizes={sizes} className="object-cover transition duration-700 ease-out group-hover:scale-105" />}
+      {post.image ? <Image src={post.image} alt="" fill sizes={sizes} className="object-cover transition duration-700 ease-out group-hover:scale-105" /> : <ImagePlaceholder dark={className.includes("absolute")} />}
     </span>
   );
 }

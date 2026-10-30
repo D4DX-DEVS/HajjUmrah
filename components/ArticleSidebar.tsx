@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 import YtThumb from "@/components/YtThumb";
 import { allPosts, allVideos, decode, fmtDate, getCategory, postHref, postsIn, type Post } from "@/lib/data";
 
@@ -13,7 +14,7 @@ function Story({ post }: { post: Post }) {
   return (
     <li className="group relative flex gap-3 py-3 first:pt-0 last:pb-0">
       <span className="relative block h-16 w-20 shrink-0 overflow-hidden bg-madinah-wash">
-        {post.image && <Image src={post.image} alt="" fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" />}
+        {post.image ? <Image src={post.image} alt="" fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" /> : <ImagePlaceholder />}
       </span>
       <div className="min-w-0">
         <h3 className="line-clamp-3 text-sm font-bold leading-snug"><Link href={postHref(post)} className="after:absolute after:inset-0"><span className="sweep pb-0.5">{decode(post.title)}</span></Link></h3>
@@ -35,7 +36,7 @@ export default function ArticleSidebar({ post, headings }: { post: Post; heading
   return (
     <aside className="space-y-6" aria-label="Related">
       <Link href={`/${post.category}`} className="group relative flex min-h-56 flex-col justify-end overflow-hidden bg-ink p-5 text-white ring-1 ring-gold/30">
-        {catImage && <Image src={catImage} alt="" fill sizes="320px" className="object-cover opacity-70 transition duration-700 group-hover:scale-105" />}
+        {catImage ? <Image src={catImage} alt="" fill sizes="320px" className="object-cover opacity-70 transition duration-700 group-hover:scale-105" /> : <ImagePlaceholder dark />}
         <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
         <span className="relative font-display text-2xl font-black text-gold-light">{cat?.name}</span>
         <span className="relative mt-1 text-sm text-white/80">All {postsIn(post.category).length} posts <span aria-hidden>→</span></span>

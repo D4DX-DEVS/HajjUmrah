@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 // YouTube serves a tiny placeholder (or 404) for removed/private videos; show a plain block instead.
 export default function YtThumb({ id, className }: { id: string; className?: string }) {
@@ -7,7 +8,7 @@ export default function YtThumb({ id, className }: { id: string; className?: str
   const check = (img: HTMLImageElement | null) => {
     if (img?.complete && img.naturalWidth <= 120) setBad(true);
   };
-  if (bad) return <div aria-hidden className={`${className} bg-madinah-wash`} />;
+  if (bad) return <div className={`${className} relative`}><ImagePlaceholder /></div>;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
