@@ -74,7 +74,7 @@ export default function AdminApp() {
           <nav aria-label="Admin" className="flex gap-1">{tab("posts", "Posts")}{tab("videos", "Videos")}</nav>
           <div className="ml-auto flex items-center gap-4">
             <a href="/" target="_blank" rel="noreferrer" className="hidden items-center gap-1 text-sm font-semibold text-white/70 hover:text-white sm:inline-flex">View site <IconExternal /></a>
-            <button onClick={logout} className="text-sm font-semibold text-white/70 hover:text-gold-light">Log out</button>
+            <button onClick={logout} className="-my-2 py-3 text-sm font-semibold text-white/70 hover:text-gold-light">Log out</button>
           </div>
         </div>
       </header>

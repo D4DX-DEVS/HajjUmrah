@@ -58,7 +58,7 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
 
       {rows.length > shown && (
         <div className="text-center">
-          <button onClick={() => setShown(shown + PAGE)} className="text-sm font-medium text-madinah hover:underline">
+          <button onClick={() => setShown(shown + PAGE)} className="py-2.5 text-sm font-semibold text-madinah hover:underline">
             Show more ({rows.length - shown} left)
           </button>
         </div>

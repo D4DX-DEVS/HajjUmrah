@@ -207,7 +207,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
             ) : (
               <p>
                 <span className="break-all">/{f.category}/{finalSlug || "..."}</span>{" "}
-                <button type="button" onClick={() => setSlugOpen(true)} className="font-medium text-madinah hover:underline">Edit</button>
+                <button type="button" onClick={() => setSlugOpen(true)} className="-my-2 px-2 py-3 font-medium text-madinah hover:underline">Edit</button>
               </p>
             )}
           </div>
@@ -229,11 +229,11 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
               </select>
             </Field>
             <details className="text-sm" open={f.extraCats.length > 0}>
-              <summary className="cursor-pointer text-neutral-500 hover:text-neutral-800">Also show in other categories{f.extraCats.length ? ` (${f.extraCats.length})` : ""}</summary>
+              <summary className="cursor-pointer py-2 text-neutral-500 hover:text-neutral-800">Also show in other categories{f.extraCats.length ? ` (${f.extraCats.length})` : ""}</summary>
               <div className="mt-2 space-y-1.5">
                 {index.categories.filter((c) => c.slug !== f.category).map((c) => (
-                  <label key={c.slug} className="flex items-center gap-2">
-                    <input type="checkbox" checked={f.extraCats.includes(c.slug)} onChange={(e) => set({ extraCats: e.target.checked ? [...f.extraCats, c.slug] : f.extraCats.filter((x) => x !== c.slug) })} className="h-4 w-4 accent-madinah" />
+                  <label key={c.slug} className="flex items-center gap-3 py-1.5">
+                    <input type="checkbox" checked={f.extraCats.includes(c.slug)} onChange={(e) => set({ extraCats: e.target.checked ? [...f.extraCats, c.slug] : f.extraCats.filter((x) => x !== c.slug) })} className="h-5 w-5 accent-madinah" />
                     {c.name}
                   </label>
                 ))}
@@ -265,7 +265,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
 
           <Card title="Summary">
             <details className="text-sm" open={!!f.excerpt}>
-              <summary className="cursor-pointer text-neutral-500 hover:text-neutral-800">Write a short summary (optional)</summary>
+              <summary className="cursor-pointer py-2 text-neutral-500 hover:text-neutral-800">Write a short summary (optional)</summary>
               <textarea value={f.excerpt} onChange={(e) => set({ excerpt: e.target.value })} rows={4} maxLength={20000} aria-label="Summary" className={`${input} mt-2`} />
               <p className="mt-1 text-xs text-neutral-500">Shown on cards and in search. Defaults to the start of the text.</p>
             </details>

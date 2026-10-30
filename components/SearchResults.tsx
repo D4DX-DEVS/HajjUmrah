@@ -13,8 +13,8 @@ export default function SearchResults({ index }: { index: Item[] }) {
     <ul className="divide-y divide-hairline">
       {hits.map((i) => (
         <li key={i.h} className="py-4">
-          <Link href={i.h} className="font-display text-lg font-extrabold hover:text-madinah">{i.t}</Link>
-          <p className="mt-1 line-clamp-2 text-sm text-neutral-600">{i.e}</p>
+          <Link href={i.h} className="inline-block py-1.5 font-display text-lg font-extrabold [overflow-wrap:anywhere] hover:text-madinah">{i.t}</Link>
+          <p className="line-clamp-2 text-sm text-neutral-600 [overflow-wrap:anywhere]">{i.e}</p>
         </li>
       ))}
     </ul>

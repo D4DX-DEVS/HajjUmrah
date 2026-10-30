@@ -77,7 +77,7 @@ export default function ArticleSidebar({ post, headings }: { post: Post; heading
               </li>
             ))}
           </ul>
-          <Link href="/videos" className="mt-4 inline-block text-sm font-semibold text-madinah hover:underline">All videos →</Link>
+          <Link href="/videos" className="mt-2 inline-block py-2.5 text-sm font-semibold text-madinah hover:underline">All videos →</Link>
         </section>
       )}
 

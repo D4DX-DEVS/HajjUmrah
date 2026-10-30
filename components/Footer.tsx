@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { allCategories } from "@/lib/data";
 
-const link = "inline-block py-2.5 text-white/75 transition-colors hover:text-gold-light";
+const link = "inline-block min-w-11 py-2.5 text-white/75 transition-colors hover:text-gold-light";
 const head = "font-display text-base font-extrabold text-gold-light";
 
 export default function Footer() {
