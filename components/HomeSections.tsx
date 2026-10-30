@@ -6,7 +6,7 @@ import PostRow from "@/components/PostRow";
 import SectionHeader from "@/components/SectionHeader";
 import VideoPlayer from "@/components/VideoPlayer";
 import YtThumb from "@/components/YtThumb";
-import { allCategories, allPosts, allTags, allVideos, decode, fmtDate, postHref, type Post } from "@/lib/data";
+import { decode, fmtDate, getData, postHref, type Post } from "@/lib/data";
 
 // One band per category, alternating light and dark like the reference design. Each shows only real posts.
 export const BLURBS: Record<string, string> = {
@@ -42,7 +42,8 @@ const arrow = (
 );
 
 // Hajj & Umrah: lead story, a numbered list, and real site counts.
-export function HajjUmrah({ posts }: { posts: Post[] }) {
+export async function HajjUmrah({ posts }: { posts: Post[] }) {
+  const { allPosts, allCategories, allTags, allVideos } = await getData();
   const [lead, ...rest] = posts;
   const stats: [number, string][] = [[allPosts.length, "Posts"], [allCategories.length, "Categories"], [allTags.length, "Topics"], [allVideos.length, "Videos"]];
   return (
@@ -191,7 +192,8 @@ export function History({ posts, title, href }: { posts: Post[]; title: string; 
 }
 
 // Videos: a playable lead video and a short list.
-export function Videos() {
+export async function Videos() {
+  const { allVideos } = await getData();
   const vids = allVideos.filter((v) => v.youtubeId).slice(0, 4);
   const [lead, ...rest] = vids;
   if (!lead) return null;

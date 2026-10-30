@@ -1,29 +1,21 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hajj-next",
-  "main": "worker/index.ts",
+  "main": "worker.ts",
   "compatibility_date": "2026-10-01",
   // vars and secrets show up in process.env
-  "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    // `next build` output (output: "export")
-    "directory": "./out",
-    "binding": "ASSETS",
-    // real 404 status with out/404.html
-    "not_found_handling": "404-page",
-    "html_handling": "auto-trailing-slash",
-    // only the APIs run Worker code; pages and images are free static assets
-    "run_worker_first": ["/api/*"]
-  },
-  // admin: images go to this bucket, posts are committed to this repo (secrets: ADMIN_PASSWORD, GITHUB_TOKEN)
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // worker.ts renders pages through a call to itself (see "Page cache" in the README)
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hajj-next" }],
+  // images uploaded in the admin, and the stored copies of rendered pages (cache/)
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "hajjumra" }],
   "vars": {
-    "GITHUB_REPO": "D4DX-DEVS/HajjUmrah",
-    "GITHUB_BRANCH": "main",
+    "SITE_URL": "https://hajj.islamonlive.in",
     // public address of the bucket, used for image previews in the admin
     "MEDIA_URL": "https://pub-c7884d3013394bc9948f3795c715c94a.r2.dev"
   },
-  // contact-form messages and admin login attempts (tables created by migrations/)
+  // posts, tags, videos (D1 is the source of truth), contact messages and admin login attempts (migrations/)
   "d1_databases": [
     {
       "binding": "DB",
@@ -31,5 +23,7 @@
       "database_id": "7f743071-4df2-4f35-a78e-76be82fe33b4",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
+  // fills the page cache: renders a few pages nobody has visited yet on every run
+  "triggers": { "crons": ["*/5 * * * *"] }
 }

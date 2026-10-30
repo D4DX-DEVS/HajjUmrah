@@ -1,11 +1,12 @@
 import Hero from "@/components/Hero";
 import { Articles, Fatwa, Fiqh, HajjUmrah, History, Rituals, Videos } from "@/components/HomeSections";
 import JsonLd from "@/components/JsonLd";
-import { SITE, allCategories, allPosts, type Post } from "@/lib/data";
+import { SITE, getData, type Post } from "@/lib/data";
 
 export const metadata = { alternates: { canonical: "/" } };
 
-export default function Home() {
+export default async function Home() {
+  const { allCategories, allPosts } = await getData();
   const hero = allPosts.slice(0, 3);
   const seen = new Set(hero.map((p) => p.id)); // each post appears once on the page
   // primary-category posts first, then any other post tagged with the category; `pic` wants the lead to have a picture

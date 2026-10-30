@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
-import { decode, fmtDate, getCategory, postHref, type Post } from "@/lib/data";
+import { decode, fmtDate, getData, postHref, type Post } from "@/lib/data";
 
 // Staggered entrance: --i orders the lines (category, title, meta).
-function Tile({ post, big }: { post: Post; big?: boolean }) {
+async function Tile({ post, big }: { post: Post; big?: boolean }) {
+  const { getCategory } = await getData();
   const delay = (i: number) => ({ "--i": i }) as React.CSSProperties;
   return (
     <Link href={postHref(post)} className={`group relative block overflow-hidden bg-ink-soft ring-1 ring-gold/25 ${big ? "min-h-[26rem] sm:min-h-[34rem] lg:col-span-2 lg:row-span-2 lg:min-h-[36rem]" : "min-h-48 sm:min-h-52"}`}>

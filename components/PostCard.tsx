@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
-import { decode, fmtDate, getCategory, postHref, type Post } from "@/lib/data";
+import { decode, fmtDate, getData, postHref, type Post } from "@/lib/data";
 
 // lead: bigger title; wide: image beside text on large screens (section with no side list)
-export default function PostCard({ post, lead, wide, as: H = "h3" }: { post: Post; lead?: boolean; wide?: boolean; as?: "h2" | "h3" }) {
+export default async function PostCard({ post, lead, wide, as: H = "h3" }: { post: Post; lead?: boolean; wide?: boolean; as?: "h2" | "h3" }) {
+  const { getCategory } = await getData();
   return (
     <article className={`group relative flex flex-col ${wide ? "lg:flex-row lg:items-center lg:gap-8" : ""}`}>
       <Link

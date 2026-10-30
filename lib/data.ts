@@ -1,11 +1,7 @@
-import fs from "node:fs";
-import path from "node:path";
-import categories from "@/content/categories.json";
-import pages from "@/content/pages.json";
-import videos from "@/content/videos.json";
-import tags from "@/content/tags.json";
-import authorBios from "@/content/authors.json";
+import { cache } from "react";
+import { db } from "@/lib/server/d1";
 
+// Posts without the body (it is fetched on its own page); the site list pages never need it.
 export type Post = {
   id: number;
   slug: string;
@@ -13,19 +9,16 @@ export type Post = {
   title: string;
   date: string;
   excerpt: string;
-  content: string;
   image: string | null;
   author: { id: number; name: string; slug: string };
   categories: string[];
   tags: string[];
 };
 
-// One JSON file per post (content/posts/<id>.json), read at build time.
-const postsDir = path.join(process.cwd(), "content/posts");
-const posts: Post[] = fs
-  .readdirSync(postsDir)
-  .filter((f) => f.endsWith(".json"))
-  .map((f) => JSON.parse(fs.readFileSync(path.join(postsDir, f), "utf8")));
+type Row = { id: number; slug: string; category: string; title: string; date: string; excerpt: string; image: string | null; author_id: number; author_name: string; author_slug: string; categories: string; tags: string };
+type Category = { id: number; slug: string; name: string; count: number };
+type Tag = { id: number; slug: string; name: string; count: number };
+type Video = { slug: string; title: string; date: string; youtubeId: string; image: string | null };
 
 // WP exported some slugs percent-encoded; Next hands route params over decoded, so store them decoded.
 const dec = (s: string) => {
@@ -34,22 +27,43 @@ const dec = (s: string) => {
 // Optional: serve /uploads/** from R2 (bucket keys mirror the paths). Set at build time, e.g. https://media.example.com
 const MEDIA = (process.env.NEXT_PUBLIC_MEDIA_URL ?? "").replace(/\/+$/, "");
 const media = (s: string) => (MEDIA ? s.replace(/(^|[\s"',(])\/uploads\//g, `$1${MEDIA}/uploads/`) : s);
-export const allPosts = posts
-  .map((p) => ({ ...p, slug: dec(p.slug), tags: p.tags.map(dec), image: p.image && media(p.image), content: media(p.content) })).sort((a, b) => b.date.localeCompare(a.date));
-export const allCategories = categories;
-export const allVideos = videos.map((v) => ({ ...v, slug: dec(v.slug) }));
-export const getVideo = (slug: string) => allVideos.find((v) => v.slug === dec(slug));
-export const getPage = (slug: string) => pages.find((p) => p.slug === slug);
-export const getCategory = (slug: string) => categories.find((c) => c.slug === slug);
-export const postsIn = (cat: string) => allPosts.filter((p) => p.categories.includes(cat));
-export const getPost = (cat: string, slug: string) => allPosts.find((p) => p.category === cat && p.slug === dec(slug));
-export const authors = [...new Map(allPosts.map((p) => [p.author.slug, p.author])).values()];
-export const postsBy = (slug: string) => allPosts.filter((p) => p.author.slug === slug);
+
+// All site data in two queries, shared by everything rendered for one request.
+export const getData = cache(async () => {
+  const [p, d] = await Promise.all([
+    db.prepare("SELECT id, slug, category, title, date, excerpt, image, author_id, author_name, author_slug, categories, tags FROM posts ORDER BY date DESC").bind().all<Row>(),
+    db.prepare("SELECT key, json FROM docs").bind().all<{ key: string; json: string }>(),
+  ]);
+  const doc = <T,>(key: string): T[] => JSON.parse(d.results.find((r) => r.key === key)?.json ?? "[]");
+  const allPosts: Post[] = p.results.map((r) => ({
+    id: r.id, slug: dec(r.slug), category: r.category, title: r.title, date: r.date, excerpt: r.excerpt, image: r.image && media(r.image),
+    author: { id: r.author_id, name: r.author_name, slug: r.author_slug },
+    categories: JSON.parse(r.categories), tags: (JSON.parse(r.tags) as string[]).map(dec),
+  }));
+  const allCategories = doc<Category>("categories");
+  const allVideos = doc<Video>("videos").map((v) => ({ ...v, slug: dec(v.slug) }));
+  const allTags = doc<Tag>("tags").map((t) => ({ ...t, slug: dec(t.slug) }));
+  const bios = doc<{ slug: string; description: string }>("authors");
+  return {
+    allPosts, allCategories, allVideos, allTags,
+    getVideo: (slug: string) => allVideos.find((v) => v.slug === dec(slug)),
+    getCategory: (slug: string) => allCategories.find((c) => c.slug === slug),
+    postsIn: (cat: string) => allPosts.filter((x) => x.categories.includes(cat)),
+    getPost: (cat: string, slug: string) => allPosts.find((x) => x.category === cat && x.slug === dec(slug)),
+    authors: [...new Map(allPosts.map((x) => [x.author.slug, x.author])).values()],
+    postsBy: (slug: string) => allPosts.filter((x) => x.author.slug === slug),
+    getTag: (slug: string) => allTags.find((t) => t.slug === dec(slug)),
+    postsTagged: (slug: string) => allPosts.filter((x) => x.tags.includes(slug)),
+    authorBio: (slug: string) => bios.find((a) => a.slug === slug)?.description,
+  };
+});
+
+export async function getPostContent(id: number) {
+  const r = await db.prepare("SELECT content FROM posts WHERE id = ?").bind(id).first<{ content: string }>();
+  return media(r?.content ?? "");
+}
+
 export const postHref = (p: Post) => `/${p.category}/${p.slug}`;
-export const allTags = tags.map((t) => ({ ...t, slug: dec(t.slug) }));
-export const getTag = (slug: string) => allTags.find((t) => t.slug === dec(slug));
-export const postsTagged = (slug: string) => allPosts.filter((p) => p.tags.includes(slug));
-export const authorBio = (slug: string) => authorBios.find((a) => a.slug === slug)?.description;
 export const SITE = "https://hajj.islamonlive.in";
 export const PER_PAGE = 12;
 export const pageCount = (n: number) => Math.max(1, Math.ceil(n / PER_PAGE));

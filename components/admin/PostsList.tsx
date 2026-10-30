@@ -18,7 +18,7 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="font-display text-3xl font-black">Posts <span className="text-xl font-bold text-neutral-400">({index.posts.length})</span></h2>
-          <p className="text-sm text-neutral-500">Changes you save appear here after the site rebuilds.</p>
+          <p className="text-sm text-neutral-500">Changes you save are live on the site at once.</p>
         </div>
         <button onClick={() => onOpen()} className={btnPrimary}><IconPlus /> New post</button>
       </div>

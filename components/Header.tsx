@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import HideOnScroll from "@/components/HideOnScroll";
 import NavLink from "@/components/NavLink";
-import { allCategories } from "@/lib/data";
+import { getData } from "@/lib/data";
 
 const order = ["hajj-umrah", "articles", "fatwa", "fiqh", "history-culture", "rituals"];
-const cats = order.map((s) => allCategories.find((c) => c.slug === s)).filter((c) => c !== undefined);
 
-export default function Header() {
+export default async function Header() {
+  const { allCategories } = await getData();
+  const cats = order.map((s) => allCategories.find((c) => c.slug === s)).filter((c) => c !== undefined);
   return (
     <HideOnScroll className="site-header sticky top-0 z-20 border-b border-hairline bg-ihram/90 shadow-[0_1px_0_0_var(--color-gold-light)] backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 xl:flex-nowrap xl:gap-x-3 px-4 py-1.5 sm:py-2">

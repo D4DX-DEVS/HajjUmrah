@@ -89,7 +89,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
       return k ?? { slug: slugify(name) || name.toLowerCase().replace(/\s+/g, "-"), name };
     });
     try {
-      const r = await api<{ id: number; sha: string; commitUrl: string }>("post", {
+      const r = await api<{ id: number; sha: string }>("post", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -116,7 +116,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
       setF(saved);
       setBaseline(JSON.stringify(saved));
       setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-      onNotify(id != null ? "Changes saved. The site updates in about 2-3 minutes." : "Post published. The site updates in about 2-3 minutes.", r.commitUrl);
+      onNotify(id != null ? "Changes saved. They are live on the site now." : "Post published. It is live on the site now.");
     } catch (x) {
       onError(x);
       setErr((x as Error).message);
@@ -147,11 +147,11 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
   }, [dirty, onBack]);
 
   async function remove() {
-    if (id == null || !confirm("Delete this post? It disappears from the site after the rebuild. Git keeps a copy in its history.")) return;
+    if (id == null || !confirm("Delete this post? It disappears from the site at once and cannot be restored.")) return;
     setBusy(true);
     try {
       await api(`post?id=${id}&sha=${sha}`, { method: "DELETE" });
-      onNotify("Post deleted. The site updates in about 2-3 minutes.");
+      onNotify("Post deleted.");
       onBack();
     } catch (x) {
       onError(x);

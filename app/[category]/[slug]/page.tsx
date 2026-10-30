@@ -6,12 +6,11 @@ import JsonLd from "@/components/JsonLd";
 import PostCard from "@/components/PostCard";
 import SectionHeader from "@/components/SectionHeader";
 import ShareLinks from "@/components/ShareLinks";
-import { SITE, allPosts, decode, fmtDate, getCategory, getPost, getTag, postHref, postsIn } from "@/lib/data";
-
-export const generateStaticParams = () => allPosts.map((p) => ({ category: p.category, slug: p.slug }));
+import { SITE, decode, fmtDate, getData, getPostContent, postHref } from "@/lib/data";
 
 export async function generateMetadata({ params }: PageProps<"/[category]/[slug]">) {
   const { category, slug } = await params;
+  const { getCategory, getPost } = await getData();
   const post = getPost(category, slug);
   if (!post) return {};
   return {
@@ -24,20 +23,22 @@ export async function generateMetadata({ params }: PageProps<"/[category]/[slug]
 
 export default async function PostPage({ params }: PageProps<"/[category]/[slug]">) {
   const { category, slug } = await params;
+  const { getCategory, getPost, getTag, postsIn } = await getData();
   const post = getPost(category, slug);
   if (!post) notFound();
+  const content = await getPostContent(post.id);
   const catName = getCategory(category)?.name ?? category;
   const url = SITE + encodeURI(postHref(post));
   // Headings get ids so the sidebar can link to them; the reading time is a plain word count.
   const headings: Heading[] = [];
-  const html = post.content.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/g, (m, lvl, attrs, inner) => {
+  const html = content.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/g, (m, lvl, attrs, inner) => {
     const text = decode(inner.replace(/<[^>]+>/g, "")).trim();
     if (!text || /\bid=/.test(attrs)) return m;
     const id = `s${headings.length + 1}`;
     headings.push({ id, text });
     return `<h${lvl}${attrs} id="${id}">${inner}</h${lvl}>`;
   });
-  const minutes = Math.max(1, Math.round(post.content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length / 180));
+  const minutes = Math.max(1, Math.round(content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length / 180));
   const more = postsIn(category).filter((p) => p.id !== post.id).slice(4, 8);
   return (
     <>

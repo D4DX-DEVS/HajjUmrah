@@ -2,16 +2,16 @@ import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import PageTitle from "@/components/PageTitle";
 import VideoPlayer from "@/components/VideoPlayer";
-import { SITE, allVideos, decode, fmtDate, getVideo } from "@/lib/data";
-
-export const generateStaticParams = () => allVideos.filter((v) => v.youtubeId).map((v) => ({ slug: v.slug }));
+import { SITE, decode, fmtDate, getData } from "@/lib/data";
 
 export async function generateMetadata({ params }: PageProps<"/video/[slug]">) {
+  const { getVideo } = await getData();
   const v = getVideo((await params).slug);
   return { title: v && decode(v.title), description: v && `${decode(v.title)}: a Malayalam video on Hajj and Umrah from islamonlive.`, alternates: { canonical: `/video/${v?.slug}` } };
 }
 
 export default async function VideoPage({ params }: PageProps<"/video/[slug]">) {
+  const { getVideo } = await getData();
   const v = getVideo((await params).slug);
   if (!v?.youtubeId) notFound();
   return (

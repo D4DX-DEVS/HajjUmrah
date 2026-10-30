@@ -6,6 +6,9 @@ import Footer from "@/components/Footer";
 import SiteChrome from "@/components/SiteChrome";
 import "./globals.css";
 
+// every page renders per request from D1 (worker.ts stores the result)
+export const dynamic = "force-dynamic";
+
 const font = Noto_Sans_Malayalam({ subsets: ["malayalam", "latin"] });
 const display = Noto_Serif_Malayalam({ subsets: ["malayalam", "latin"], weight: ["600", "700", "800", "900"], variable: "--font-serif-ml" });
 

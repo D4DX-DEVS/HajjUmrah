@@ -1,11 +1,17 @@
 import { d1Configured, db } from "./d1";
-import { GitHubError, deleteFile, getFile, listNames, putFile } from "./github";
-import { r2Configured, r2Exists, r2Put } from "./r2";
+import { getData } from "@/lib/data";
+import { r2Configured, r2Exists, r2Put, purgePages } from "./r2";
 import { sanitizeHtml } from "./sanitize";
 
-// Admin API (/api/admin/*). One shared password -> signed HttpOnly cookie. Saving a post commits a JSON file
-// to the GitHub repo; the connected Git deploy then rebuilds the site.
-// Env: ADMIN_PASSWORD, plus the D1 / R2 / GitHub variables read in ./d1, ./r2 and ./github.
+// Admin API (/api/admin/*). One shared password -> signed HttpOnly cookie. Posts and videos are rows in D1;
+// every change also purges the stored pages (purgePages), so it is live at once.
+// Env: ADMIN_PASSWORD. Bindings: DB, MEDIA (./d1, ./r2).
+
+class HttpError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+  }
+}
 
 const SESSION_SECONDS = 12 * 3600;
 const MAX_FAILS_PER_IP = 5;
@@ -73,69 +79,61 @@ async function login(req: Request) {
 }
 
 // ---------- validation ----------
-type Index = {
-  categories: { slug: string; name: string }[];
-  authors: { id: number; name: string; slug: string }[];
-  tags: { slug: string; name: string }[];
-  posts: { id: number; slug: string }[];
-};
 const dec = (s: string) => {
   try { return decodeURIComponent(s); } catch { return s; }
 };
-// the static site data written at build time (app/admin/index.json)
-async function siteIndex(req: Request): Promise<Index> {
-  const r = await fetch(new URL("/admin/index.json", req.url));
-  if (!r.ok) throw new GitHubError(500, "site index missing (build the site first)");
-  return (await r.json()) as Index;
+// categories, authors, tags and post ids/slugs, for validation
+async function siteIndex() {
+  const d = await getData();
+  return { categories: d.allCategories, authors: d.authors, tags: d.allTags, posts: d.allPosts };
 }
 const text = (v: unknown, min: number, max: number, label: string) => {
   const s = typeof v === "string" ? v.trim() : "";
-  if (s.length < min || s.length > max) throw new GitHubError(400, `${label} must be ${min}-${max} characters`);
+  if (s.length < min || s.length > max) throw new HttpError(400, `${label} must be ${min}-${max} characters`);
   return s;
 };
 const SLUG = /^[^\s/?#%\\]+$/;
 const slugOk = (s: string, label: string) => {
-  if (!SLUG.test(s) || s.length > 200) throw new GitHubError(400, `${label} cannot contain spaces or / ? # %`);
+  if (!SLUG.test(s) || s.length > 200) throw new HttpError(400, `${label} cannot contain spaces or / ? # %`);
   return s;
 };
-const msg = (s: string) => s.replace(/\s+/g, " ").slice(0, 80);
 
-async function buildPost(req: Request, input: Record<string, unknown>, id: number) {
-  const idx = await siteIndex(req);
+async function buildPost(input: Record<string, unknown>, id: number) {
+  const idx = await siteIndex();
   const title = text(input.title, 1, 300, "title");
   const slug = slugOk(dec(text(input.slug, 1, 200, "slug")), "slug"); // imported slugs may be percent-encoded; store them decoded
-  if (slug === "page") throw new GitHubError(400, 'the slug "page" is reserved');
-  if (idx.posts.some((p) => p.id !== id && dec(p.slug) === slug)) throw new GitHubError(400, `slug "${slug}" is already used by another post`);
+  if (slug === "page") throw new HttpError(400, 'the slug "page" is reserved');
+  if (idx.posts.some((p) => p.id !== id && dec(p.slug) === slug)) throw new HttpError(400, `slug "${slug}" is already used by another post`);
   const category = String(input.category ?? "");
-  if (!idx.categories.some((c) => c.slug === category)) throw new GitHubError(400, "unknown category");
+  if (!idx.categories.some((c) => c.slug === category)) throw new HttpError(400, "unknown category");
   const extra = Array.isArray(input.categories) ? (input.categories as unknown[]).map(String) : [];
-  if (extra.some((c) => !idx.categories.some((x) => x.slug === c))) throw new GitHubError(400, "unknown category");
+  if (extra.some((c) => !idx.categories.some((x) => x.slug === c))) throw new HttpError(400, "unknown category");
   const categories = [category, ...new Set(extra.filter((c) => c !== category))]; // primary first; it decides the URL
 
   const a = (input.author ?? {}) as { name?: unknown; slug?: unknown };
   const aSlug = String(a.slug ?? "");
   const known = idx.authors.find((x) => x.slug === aSlug);
-  if (!known && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(aSlug)) throw new GitHubError(400, "author slug must be lowercase English letters, numbers and dashes");
+  if (!known && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(aSlug)) throw new HttpError(400, "author slug must be lowercase English letters, numbers and dashes");
   const author = known ?? { id: Math.floor(Date.now() / 1000), name: text(a.name, 1, 100, "author name"), slug: aSlug };
 
   const dm = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(:\d{2})?$/.exec(String(input.date ?? ""));
-  if (!dm || Number.isNaN(new Date(dm[1] + ":00Z").getTime())) throw new GitHubError(400, "date must look like 2026-10-27T09:30");
+  if (!dm || Number.isNaN(new Date(dm[1] + ":00Z").getTime())) throw new HttpError(400, "date must look like 2026-10-27T09:30");
   const date = dm[1] + (dm[2] ?? ":00");
 
   const content = sanitizeHtml(text(input.content, 1, 500_000, "body"));
   const plain = content.replace(/<[^>]+>/g, " ").replace(/&(amp|lt|gt|quot|nbsp|#39);/g, (_, e) => ({ amp: "&", lt: "<", gt: ">", quot: '"', nbsp: " ", "#39": "'" })[e as string] ?? "").replace(/\s+/g, " ").trim();
-  if (!plain && !/<(img|iframe)\b/i.test(content)) throw new GitHubError(400, "the body is empty");
+  if (!plain && !/<(img|iframe)\b/i.test(content)) throw new HttpError(400, "the body is empty");
   const excerpt = typeof input.excerpt === "string" && input.excerpt.trim() ? text(input.excerpt, 1, 20000, "excerpt") : plain.slice(0, 200);
 
   const image = input.image == null || input.image === "" ? null : String(input.image);
-  if (image !== null && !/^(\/uploads\/[\w./-]+|https:\/\/[^\s"'<>]+)$/.test(image)) throw new GitHubError(400, "image must be an /uploads/... path or an https:// URL");
+  if (image !== null && !/^(\/uploads\/[\w./-]+|https:\/\/[^\s"'<>]+)$/.test(image)) throw new HttpError(400, "image must be an /uploads/... path or an https:// URL");
 
   const rawTags = Array.isArray(input.tags) ? input.tags : [];
-  if (rawTags.length > 20) throw new GitHubError(400, "at most 20 tags");
+  if (rawTags.length > 20) throw new HttpError(400, "at most 20 tags");
   const tags: { slug: string; name: string }[] = [];
   for (const t of rawTags as { slug?: unknown; name?: unknown }[]) {
     const s = slugOk(dec(text(t?.slug, 1, 240, "tag slug")), "tag slug"); // imported tag slugs may be percent-encoded
-    if (s.length > 80) throw new GitHubError(400, "tag slug is too long");
+    if (s.length > 80) throw new HttpError(400, "tag slug is too long");
     if (!tags.some((x) => x.slug === s)) tags.push({ slug: s, name: text(t?.name, 1, 80, "tag name") });
   }
   const newTags = tags.filter((t) => !idx.tags.some((x) => x.slug === t.slug));
@@ -143,77 +141,99 @@ async function buildPost(req: Request, input: Record<string, unknown>, id: numbe
   return { post, newTags };
 }
 
-async function addTags(tags: { slug: string; name: string }[], why: string) {
+async function addTags(tags: { slug: string; name: string }[]) {
   for (let attempt = 0; attempt < 2; attempt++) {
-    const f = await getFile("content/tags.json");
-    if (!f) throw new GitHubError(500, "content/tags.json is missing");
-    const list = JSON.parse(f.text) as { id: number; slug: string; name: string; count: number }[];
+    const row = await db.prepare("SELECT json, rev FROM docs WHERE key = 'tags'").bind().first<{ json: string; rev: number }>();
+    if (!row) throw new HttpError(500, "tags are missing from the database");
+    const list = JSON.parse(row.json) as { id: number; slug: string; name: string; count: number }[];
     let id = Math.max(0, ...list.map((t) => t.id));
     const before = list.length;
     for (const t of tags) if (!list.some((x) => dec(x.slug) === t.slug)) list.push({ id: ++id, slug: t.slug, name: t.name, count: 1 });
-    if (list.length === before) return; // nothing new: no commit (it would only trigger a rebuild)
-    try {
-      await putFile("content/tags.json", JSON.stringify(list, null, 1), `Admin: add tags (${msg(why)})`, f.sha);
-      return;
-    } catch (e) {
-      if (!(e instanceof GitHubError) || e.status !== 409 || attempt) throw e; // retry once on a concurrent edit
-    }
+    if (list.length === before) return;
+    const r = await db.prepare("UPDATE docs SET json = ?, rev = rev + 1 WHERE key = 'tags' AND rev = ?").bind(JSON.stringify(list), row.rev).run();
+    if (r.meta.changes) return;
+    if (attempt) throw new HttpError(409, "conflict: tags changed, retry");
   }
 }
 
 // ---------- handlers ----------
 const idParam = (url: URL) => {
   const id = Number(url.searchParams.get("id"));
-  if (!Number.isInteger(id) || id < 1) throw new GitHubError(400, "bad id");
+  if (!Number.isInteger(id) || id < 1) throw new HttpError(400, "bad id");
   return id;
 };
+// `sha` is the row's revision number: the editor sends back the one it loaded, and a stale one means someone else saved first
+const REV = /^\d+$/;
+
+type PostRow = { id: number; slug: string; category: string; title: string; date: string; excerpt: string; content: string; image: string | null; author_id: number; author_name: string; author_slug: string; categories: string; tags: string; rev: number };
 
 async function getPostHandler(url: URL) {
-  const f = await getFile(`content/posts/${idParam(url)}.json`);
-  return f ? json({ sha: f.sha, post: JSON.parse(f.text) }) : bad("post not found", 404);
+  const r = await db.prepare("SELECT * FROM posts WHERE id = ?").bind(idParam(url)).first<PostRow>();
+  if (!r) return bad("post not found", 404);
+  const { id, slug, category, title, date, excerpt, content, image } = r;
+  const post = { id, slug, category, title, date, excerpt, content, image, author: { id: r.author_id, name: r.author_name, slug: r.author_slug }, categories: JSON.parse(r.categories), tags: JSON.parse(r.tags) };
+  return json({ sha: String(r.rev), post });
 }
 
 async function savePost(req: Request) {
   const body = (await req.json().catch(() => null)) as { id?: number; sha?: string; post?: Record<string, unknown> } | null;
   if (!body?.post || typeof body.post !== "object") return bad("missing post");
   const updating = body.id != null;
-  if (updating && (!Number.isInteger(body.id) || !body.sha)) return bad("update needs id and sha");
-  const id = updating ? (body.id as number) : Math.max(0, ...(await listNames("content/posts")).map((n) => parseInt(n, 10) || 0)) + 1;
-  const { post, newTags } = await buildPost(req, body.post, id);
-  if (newTags.length) await addTags(newTags, post.title); // before the post commit, so the last commit has everything
-  const r = await putFile(`content/posts/${id}.json`, JSON.stringify(post, null, 1), `Admin: ${updating ? "update" : "add"} post "${msg(post.title)}"`, updating ? body.sha : undefined);
-  return json({ ok: true, id, sha: r.sha, commitUrl: r.commitUrl });
+  if (updating && (!Number.isInteger(body.id) || !REV.test(body.sha ?? ""))) return bad("update needs id and sha");
+  const id = updating ? (body.id as number) : (await db.prepare("SELECT COALESCE(MAX(id), 0) + 1 AS n FROM posts").bind().first<{ n: number }>())!.n;
+  const { post, newTags } = await buildPost(body.post, id);
+  if (newTags.length) await addTags(newTags);
+  const v = [post.slug, post.category, post.title, post.date, post.excerpt, post.content, post.image, post.author.id, post.author.name, post.author.slug, JSON.stringify(post.categories), JSON.stringify(post.tags)];
+  let rev = 1;
+  if (updating) {
+    const r = await db
+      .prepare("UPDATE posts SET slug = ?, category = ?, title = ?, date = ?, excerpt = ?, content = ?, image = ?, author_id = ?, author_name = ?, author_slug = ?, categories = ?, tags = ?, rev = rev + 1 WHERE id = ? AND rev = ?")
+      .bind(...v, id, Number(body.sha))
+      .run();
+    if (!r.meta.changes) return bad("conflict: the post changed, reload and retry", 409);
+    rev = Number(body.sha) + 1;
+  } else {
+    await db
+      .prepare("INSERT INTO posts (id, slug, category, title, date, excerpt, content, image, author_id, author_name, author_slug, categories, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+      .bind(id, ...v)
+      .run();
+  }
+  await purgePages();
+  return json({ ok: true, id, sha: String(rev) });
 }
 
 async function deletePost(url: URL) {
   const sha = url.searchParams.get("sha") ?? "";
-  if (!/^[0-9a-f]{40}$/.test(sha)) return bad("missing sha");
-  const id = idParam(url);
-  const r = await deleteFile(`content/posts/${id}.json`, sha, `Admin: delete post ${id}`);
-  return json({ ok: true, commitUrl: r.commitUrl });
+  if (!REV.test(sha)) return bad("missing sha");
+  const r = await db.prepare("DELETE FROM posts WHERE id = ? AND rev = ?").bind(idParam(url), Number(sha)).run();
+  if (!r.meta.changes) return bad("conflict: the post changed or is already gone, reload", 409);
+  await purgePages();
+  return json({ ok: true });
 }
 
 async function getVideos() {
-  const f = await getFile("content/videos.json");
-  return f ? json({ sha: f.sha, videos: JSON.parse(f.text) }) : bad("videos.json missing", 500);
+  const row = await db.prepare("SELECT json, rev FROM docs WHERE key = 'videos'").bind().first<{ json: string; rev: number }>();
+  return row ? json({ sha: String(row.rev), videos: JSON.parse(row.json) }) : bad("videos are missing from the database", 500);
 }
 
 async function saveVideos(req: Request) {
   const b = (await req.json().catch(() => null)) as { sha?: string; videos?: Record<string, unknown>[] } | null;
-  if (!b?.sha || !Array.isArray(b.videos) || b.videos.length > 200) return bad("missing sha or videos");
+  if (!REV.test(b?.sha ?? "") || !Array.isArray(b?.videos) || b.videos.length > 200) return bad("missing sha or videos");
   const seen = new Set<string>();
   const videos = b.videos.map((v) => {
     const slug = slugOk(dec(text(v.slug, 1, 200, "video slug")), "video slug");
-    if (seen.has(slug)) throw new GitHubError(400, `duplicate video slug "${slug}"`);
+    if (seen.has(slug)) throw new HttpError(400, `duplicate video slug "${slug}"`);
     seen.add(slug);
     const youtubeId = String(v.youtubeId ?? "");
-    if (!/^[\w-]{11}$/.test(youtubeId)) throw new GitHubError(400, "YouTube id must be 11 characters");
+    if (!/^[\w-]{11}$/.test(youtubeId)) throw new HttpError(400, "YouTube id must be 11 characters");
     const d = String(v.date ?? "");
-    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(d) || Number.isNaN(new Date(d + "Z").getTime())) throw new GitHubError(400, "video date must look like 2026-10-27T09:30:00");
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(d) || Number.isNaN(new Date(d + "Z").getTime())) throw new HttpError(400, "video date must look like 2026-10-27T09:30:00");
     return { slug, title: text(v.title, 1, 300, "video title"), date: d, youtubeId, image: null };
   });
-  const r = await putFile("content/videos.json", JSON.stringify(videos, null, 1), "Admin: update videos", b.sha);
-  return json({ ok: true, sha: r.sha, commitUrl: r.commitUrl });
+  const r = await db.prepare("UPDATE docs SET json = ?, rev = rev + 1 WHERE key = 'videos' AND rev = ?").bind(JSON.stringify(videos), Number(b.sha)).run();
+  if (!r.meta.changes) return bad("conflict: the videos changed, reload and retry", 409);
+  await purgePages();
+  return json({ ok: true, sha: String(Number(b.sha) + 1) });
 }
 
 const MAGIC: [string, number[], string][] = [
@@ -260,7 +280,7 @@ export async function handleAdmin(req: Request): Promise<Response> {
     }
     return bad("not found", 404);
   } catch (e) {
-    if (e instanceof GitHubError) return bad(e.message, e.status === 422 ? 409 : e.status === 503 || e.status < 500 ? e.status : 502);
+    if (e instanceof HttpError) return bad(e.message, e.status === 422 ? 409 : e.status === 503 || e.status < 500 ? e.status : 502);
     console.error("admin error", e);
     return bad("server error", 500);
   }

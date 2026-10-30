@@ -57,10 +57,10 @@ export default function VideosView({ onNotify, onError }: { onNotify: (text: str
     setBusy(true);
     setErr("");
     try {
-      const r = await api<{ sha: string; commitUrl: string }>("videos", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ sha, videos }) });
+      const r = await api<{ sha: string }>("videos", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ sha, videos }) });
       setSha(r.sha);
       setSaved(JSON.stringify(videos));
-      onNotify("Videos saved. The site updates in about 2-3 minutes.", r.commitUrl);
+      onNotify("Videos saved. They are live on the site now.");
     } catch (x) {
       onError(x);
       setErr((x as Error).message);

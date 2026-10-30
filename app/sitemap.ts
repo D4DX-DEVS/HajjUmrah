@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
-import { SITE, allCategories, allPosts, allTags, allVideos, authors, pageCount, postHref, postsIn, postsTagged } from "@/lib/data";
+import { SITE, getData, pageCount, postHref } from "@/lib/data";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { allCategories, allPosts, allTags, allVideos, authors, postsIn, postsTagged } = await getData();
   const u = (p: string, lastModified?: string) => ({ url: SITE + encodeURI(p), lastModified });
   return [
     u("/"), u("/videos"), u("/about"), u("/contact"), u("/privacy-policy"),

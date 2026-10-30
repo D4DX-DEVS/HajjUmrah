@@ -9,7 +9,7 @@ import VideosView from "./VideosView";
 import { IconExternal, IconList, IconLogout, IconPlay, IconPlus, IconX } from "./ui";
 
 type View = { name: "posts" } | { name: "videos" } | { name: "post"; id?: number };
-type Toast = { text: string; href?: string };
+type Toast = { text: string };
 
 export default function AdminApp() {
   const [auth, setAuth] = useState<"checking" | "out" | "in">("checking");
@@ -20,8 +20,12 @@ export default function AdminApp() {
 
   useEffect(() => {
     api("session").then(() => setAuth("in")).catch(() => setAuth("out"));
-    fetch("/admin/index.json").then((r) => r.json()).then(setIndex).catch(() => {});
   }, []);
+
+  // the post list reads the live data again each time it is opened
+  useEffect(() => {
+    if (view.name === "posts") fetch("/admin/index.json", { cache: "no-store" }).then((r) => r.json() as Promise<Index>).then(setIndex).catch(() => {});
+  }, [view.name]);
 
   useEffect(() => {
     if (!toast) return;
@@ -33,7 +37,7 @@ export default function AdminApp() {
     await api("logout", { method: "POST" }).catch(() => {});
     setAuth("out");
   }
-  const notify = useCallback((text: string, href?: string) => setToast({ text, href }), []);
+  const notify = useCallback((text: string) => setToast({ text }), []);
   // any request that comes back 401 sends the user to the login screen
   const guard = useCallback((e: unknown) => {
     if (e instanceof ApiError && e.status === 401) setAuth("out");
@@ -100,8 +104,7 @@ export default function AdminApp() {
         <div role="status" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-start gap-3 rounded-sm bg-ink px-4 py-3 text-sm text-white shadow-lg ring-1 ring-gold/50">
           <p className="flex-1">
             {toast.text}
-            {toast.href && <> <a href={toast.href} target="_blank" rel="noreferrer" className="font-medium text-gold-light underline">View commit</a></>}
-          </p>
+                      </p>
           <button onClick={() => setToast(null)} aria-label="Dismiss" className="text-neutral-400 hover:text-white"><IconX /></button>
         </div>
       )}

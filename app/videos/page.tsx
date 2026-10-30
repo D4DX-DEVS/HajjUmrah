@@ -1,11 +1,12 @@
 import Link from "next/link";
 import PageTitle from "@/components/PageTitle";
 import VideoPlayer from "@/components/VideoPlayer";
-import { allVideos, decode } from "@/lib/data";
+import { decode, getData } from "@/lib/data";
 
 export const metadata = { title: "Videos", description: "Malayalam videos on preparing for Hajj and Umrah, its history, and a study guide.", alternates: { canonical: "/videos" } };
 
-export default function Videos() {
+export default async function Videos() {
+  const { allVideos } = await getData();
   return (
     <>
       <PageTitle>Videos</PageTitle>

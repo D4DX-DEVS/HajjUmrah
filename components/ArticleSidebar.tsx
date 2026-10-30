@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import YtThumb from "@/components/YtThumb";
-import { allPosts, allVideos, decode, fmtDate, getCategory, postHref, postsIn, type Post } from "@/lib/data";
+import { decode, fmtDate, getData, postHref, type Post } from "@/lib/data";
 
 export type Heading = { id: string; text: string };
 
@@ -25,7 +25,8 @@ function Story({ post }: { post: Post }) {
 }
 
 // Right-hand column of an article: the category, contents, related stories, videos and the latest posts.
-export default function ArticleSidebar({ post, headings }: { post: Post; headings: Heading[] }) {
+export default async function ArticleSidebar({ post, headings }: { post: Post; headings: Heading[] }) {
+  const { allPosts, allVideos, getCategory, postsIn } = await getData();
   const cat = getCategory(post.category);
   const related = postsIn(post.category).filter((p) => p.id !== post.id).slice(0, 4);
   const shown = new Set([post.id, ...related.map((p) => p.id)]);

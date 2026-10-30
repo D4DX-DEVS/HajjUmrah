@@ -28,7 +28,7 @@ async function forward(m: Message) {
 }
 
 export async function handleContact(req: Request) {
-  const b = await req.json().catch(() => null);
+  const b = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
   if (b?.website) return json({ ok: true }); // honeypot
   const m = { name: str(b?.name, 100), email: str(b?.email, 200), message: str(b?.message, 5000) };

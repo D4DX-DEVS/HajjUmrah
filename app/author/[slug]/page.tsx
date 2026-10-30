@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation";
 import PageTitle from "@/components/PageTitle";
 import PostCard from "@/components/PostCard";
-import { authorBio, authors, postsBy } from "@/lib/data";
-
-export const generateStaticParams = () => authors.map((a) => ({ slug: a.slug }));
+import { getData } from "@/lib/data";
 
 export async function generateMetadata({ params }: PageProps<"/author/[slug]">) {
   const { slug } = await params;
+  const { authorBio, authors, postsBy } = await getData();
   const name = authors.find((a) => a.slug === slug)?.name;
   const bio = authorBio(slug)?.replace(/s+/g, " ").trim();
   return { title: name, description: bio ? bio.slice(0, 155) : `Posts by ${name} on Hajj and Umrah in Malayalam (${postsBy(slug).length}).`, alternates: { canonical: `/author/${slug}` } };
@@ -14,6 +13,7 @@ export async function generateMetadata({ params }: PageProps<"/author/[slug]">) 
 
 export default async function AuthorPage({ params }: PageProps<"/author/[slug]">) {
   const { slug } = await params;
+  const { authorBio, authors, postsBy } = await getData();
   const author = authors.find((a) => a.slug === slug);
   if (!author) notFound();
   const posts = postsBy(slug);
