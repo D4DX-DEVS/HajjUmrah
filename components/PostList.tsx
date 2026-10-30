@@ -11,7 +11,7 @@ export default function PostList({ title, posts, base, page }: { title: string; 
   return (
     <>
       <PageTitle sub={`${posts.length} ${posts.length === 1 ? "post" : "posts"}`}>{title}</PageTitle>
-      <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {slicePage(posts, page).map((p) => <PostCard key={p.id} post={p} as="h2" />)}
       </div>
       <Pagination base={base} page={page} total={total} />

@@ -8,7 +8,7 @@
   --color-ink: #12100d;
   --color-ink-soft: #1c1914;
   --color-gold: #b48a3c;
-  --color-gold-deep: #8c6a25;
+  --color-gold-deep: #7a5a1c;
   --color-gold-light: #e2c079;
   --color-ihram: #fbfaf7;
   --color-hairline: #e6e2d8;
@@ -19,6 +19,7 @@
 }
 
 html, body { overflow-x: clip; }
+h1, h2, h3, h4 { overflow-wrap: anywhere; }
 html { color-scheme: light; scroll-behavior: smooth; font-size: 106.25%; }
 ::selection { background: var(--color-gold-light); color: var(--color-ink); }
 :focus-visible { outline: 2px solid var(--color-gold-deep); outline-offset: 2px; }

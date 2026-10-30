@@ -9,7 +9,7 @@ export default function Videos() {
   return (
     <>
       <PageTitle>Videos</PageTitle>
-      <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {allVideos.filter((v) => v.youtubeId).map((v) => (
           <div key={v.slug}>
             <VideoPlayer id={v.youtubeId!} title={decode(v.title)} />

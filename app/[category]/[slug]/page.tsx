@@ -51,11 +51,11 @@ export default async function PostPage({ params }: PageProps<"/[category]/[slug]
           { "@type": "ListItem", position: 3, name: decode(post.title), item: url },
         ] },
       ] }} />
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <article className="min-w-0">
           <nav aria-label="Breadcrumb" className="text-sm">
             <Link href="/" className="text-neutral-600 hover:text-madinah">Home</Link>
-            <span aria-hidden className="mx-2 text-gold">/</span>
+            <span aria-hidden className="mx-2 text-gold-deep">/</span>
             <Link href={`/${category}`} className="font-semibold text-gold-deep hover:underline">{catName}</Link>
           </nav>
           <h1 className="mt-4 font-display text-2xl font-extrabold leading-snug sm:text-4xl">{decode(post.title)}</h1>
@@ -89,7 +89,7 @@ export default async function PostPage({ params }: PageProps<"/[category]/[slug]
       {more.length > 0 && (
         <section className="mt-16 border-t border-hairline pt-12">
           <SectionHeader title="More to read" href={`/${category}`} />
-          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {more.map((p) => <PostCard key={p.id} post={p} />)}
           </div>
         </section>

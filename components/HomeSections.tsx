@@ -48,12 +48,12 @@ export function HajjUmrah({ posts }: { posts: Post[] }) {
   return (
     <Band kind="light">
       <SectionHeader title="Hajj & Umrah" blurb={BLURBS["hajj-umrah"]} href="/hajj-umrah" />
-      <div className="grid gap-10 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-5">
         <div className="lg:col-span-3"><PostCard post={lead} lead /></div>
         <ol className="flex flex-col divide-y divide-hairline lg:col-span-2">
           {rest.map((p, i) => (
             <li key={p.id} className="group relative flex items-center gap-4 py-4 first:pt-0">
-              <span aria-hidden className="w-10 shrink-0 font-display text-3xl font-black text-gold/60">{String(i + 1).padStart(2, "0")}</span>
+              <span aria-hidden className="w-10 shrink-0 font-display text-3xl font-black text-gold-deep/70">{String(i + 1).padStart(2, "0")}</span>
               <Pic post={p} sizes="96px" className="h-16 w-24 shrink-0" />
               <div className="min-w-0">
                 <h3 className="line-clamp-2 font-display text-base font-extrabold leading-snug"><Link href={postHref(p)} className="after:absolute after:inset-0"><span className="sweep pb-0.5">{decode(p.title)}</span></Link></h3>
@@ -80,7 +80,7 @@ export function Articles({ posts, title, href }: { posts: Post[]; title: string;
   return (
     <Band kind="sand">
       <SectionHeader title={title} blurb={BLURBS.articles} href={href} />
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <div className={rest.length ? "lg:col-span-3" : "lg:col-span-5"}><PostCard post={lead} lead wide={!rest.length} /></div>
         {rest.length > 0 && <div className="flex flex-col divide-y divide-hairline lg:col-span-2">{rest.map((p) => <PostRow key={p.id} post={p} />)}</div>}
       </div>
@@ -94,7 +94,7 @@ export function Fatwa({ posts, title, href }: { posts: Post[]; title: string; hr
   return (
     <Band kind="green">
       <SectionHeader title={title} blurb={BLURBS.fatwa} href={href} dark />
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <Link href={postHref(lead)} className="group relative block min-h-72 overflow-hidden ring-1 ring-gold/30 lg:col-span-2">
           <Pic post={lead} sizes="(min-width:1024px) 40vw, 100vw" className="absolute inset-0" />
           <span className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent" />
@@ -143,7 +143,7 @@ export function Fiqh({ posts, title, href }: { posts: Post[]; title: string; hre
   return (
     <Band kind="ink">
       <SectionHeader title={title} blurb={BLURBS.fiqh} href={href} dark />
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <Link href={postHref(lead)} className="group relative block min-h-[24rem] overflow-hidden ring-1 ring-gold/30 lg:col-span-3">
           <Pic post={lead} sizes="(min-width:1024px) 60vw, 100vw" className="absolute inset-0 opacity-80" />
           <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
@@ -182,7 +182,7 @@ export function History({ posts, title, href }: { posts: Post[]; title: string; 
   return (
     <Band kind="sand">
       <SectionHeader title={title} blurb={BLURBS["history-culture"]} href={href} />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {tile(lead, true)}
         {rest.map((p) => tile(p))}
       </div>
@@ -198,7 +198,7 @@ export function Videos() {
   return (
     <Band kind="ink">
       <SectionHeader title="Videos" blurb={BLURBS.videos} href="/videos" dark />
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <VideoPlayer id={lead.youtubeId!} title={decode(lead.title)} />
           <h3 className="mt-4 font-display text-xl font-extrabold">{decode(lead.title)}</h3>
