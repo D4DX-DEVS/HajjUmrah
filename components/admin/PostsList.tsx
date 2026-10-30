@@ -17,7 +17,7 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Posts</h2>
+          <h2 className="font-display text-3xl font-black">Posts</h2>
           <p className="text-sm text-neutral-500">{index.posts.length} published. Changes you save appear here after the site rebuilds.</p>
         </div>
         <button onClick={() => onOpen()} className={btnPrimary}><IconPlus /> New post</button>
@@ -38,18 +38,18 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
         </label>
       </div>
 
-      <ul className="divide-y divide-neutral-100 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
+      <ul className="divide-y divide-neutral-100 overflow-hidden rounded-sm border border-hairline bg-white shadow-sm">
         {rows.slice(0, shown).map((p) => (
           <li key={p.id}>
-            <button onClick={() => onOpen(p.id)} className="group flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-emerald-50/60 focus-visible:bg-emerald-50 focus-visible:outline-none">
+            <button onClick={() => onOpen(p.id)} className="group flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-madinah-wash/60 focus-visible:bg-madinah-wash focus-visible:outline-none">
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-medium text-neutral-900">{p.title}</span>
                 <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-neutral-500">
-                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-800">{catName(p.category)}</span>
+                  <span className="rounded-full bg-madinah-wash px-2 py-0.5 font-medium text-madinah-deep">{catName(p.category)}</span>
                   <span>{p.date.slice(0, 10)}</span>
                 </span>
               </span>
-              <IconChevron className="h-4 w-4 text-neutral-300 group-hover:text-emerald-700" />
+              <IconChevron className="h-4 w-4 text-neutral-300 group-hover:text-madinah" />
             </button>
           </li>
         ))}
@@ -58,7 +58,7 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
 
       {rows.length > shown && (
         <div className="text-center">
-          <button onClick={() => setShown(shown + PAGE)} className="text-sm font-medium text-emerald-700 hover:underline">
+          <button onClick={() => setShown(shown + PAGE)} className="text-sm font-medium text-madinah hover:underline">
             Show more ({rows.length - shown} left)
           </button>
         </div>

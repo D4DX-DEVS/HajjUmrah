@@ -5,7 +5,7 @@ import Login from "./Login";
 import PostForm from "./PostForm";
 import PostsList from "./PostsList";
 import VideosView from "./VideosView";
-import { IconExternal, IconX, btnLink } from "./ui";
+import { IconExternal, IconX } from "./ui";
 
 type View = { name: "posts" } | { name: "videos" } | { name: "post"; id?: number };
 type Toast = { text: string; href?: string };
@@ -59,7 +59,7 @@ export default function AdminApp() {
       <button
         onClick={() => setView(name === "posts" ? { name: "posts" } : { name: "videos" })}
         aria-current={on ? "page" : undefined}
-        className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${on ? "bg-emerald-50 text-emerald-800" : "text-neutral-600 hover:bg-neutral-100"}`}
+        className={`relative px-3 py-2 text-sm font-semibold transition-colors ${on ? "text-gold-light after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-gold" : "text-white/70 hover:text-white"}`}
       >
         {label}
       </button>
@@ -68,13 +68,13 @@ export default function AdminApp() {
 
   return (
     <div>
-      <header className="sticky top-0 z-30 -mx-4 -mt-6 border-b border-neutral-200 bg-white/90 backdrop-blur sm:-mt-10">
+      <header className="sticky top-0 z-30 -mx-4 -mt-6 bg-ink shadow-[0_1px_0_0_var(--color-gold)] sm:-mt-10">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4">
-          <span className="mr-2 text-base font-bold tracking-tight">Admin</span>
+          <span className="mr-3 font-display text-lg font-black text-gold-light">Admin</span>
           <nav aria-label="Admin" className="flex gap-1">{tab("posts", "Posts")}{tab("videos", "Videos")}</nav>
           <div className="ml-auto flex items-center gap-4">
-            <a href="/" target="_blank" rel="noreferrer" className={`${btnLink} hidden items-center gap-1 sm:inline-flex`}>View site <IconExternal /></a>
-            <button onClick={logout} className="text-sm font-medium text-neutral-600 hover:text-emerald-700">Log out</button>
+            <a href="/" target="_blank" rel="noreferrer" className="hidden items-center gap-1 text-sm font-semibold text-white/70 hover:text-white sm:inline-flex">View site <IconExternal /></a>
+            <button onClick={logout} className="text-sm font-semibold text-white/70 hover:text-gold-light">Log out</button>
           </div>
         </div>
       </header>
@@ -86,10 +86,10 @@ export default function AdminApp() {
       </div>
 
       {toast && (
-        <div role="status" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-start gap-3 rounded-xl bg-neutral-900 px-4 py-3 text-sm text-white shadow-lg">
+        <div role="status" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-start gap-3 rounded-sm bg-ink px-4 py-3 text-sm text-white shadow-lg ring-1 ring-gold/50">
           <p className="flex-1">
             {toast.text}
-            {toast.href && <> <a href={toast.href} target="_blank" rel="noreferrer" className="font-medium text-emerald-300 underline">View commit</a></>}
+            {toast.href && <> <a href={toast.href} target="_blank" rel="noreferrer" className="font-medium text-gold-light underline">View commit</a></>}
           </p>
           <button onClick={() => setToast(null)} aria-label="Dismiss" className="text-neutral-400 hover:text-white"><IconX /></button>
         </div>

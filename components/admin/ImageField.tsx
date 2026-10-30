@@ -31,10 +31,10 @@ export default function ImageField({ value, onChange, onError }: { value: string
   return (
     <div className="space-y-2">
       {value ? (
-        <figure className="overflow-hidden rounded-lg border border-neutral-200">
+        <figure className="overflow-hidden rounded-sm border border-hairline">
           <img src={preview || imageSrc(value)} alt="Featured" className="aspect-[16/10] w-full bg-neutral-100 object-cover" />
           <figcaption className="flex items-center justify-between gap-2 border-t border-neutral-200 bg-neutral-50 px-3 py-2 text-sm">
-            <label className="cursor-pointer font-medium text-emerald-700 hover:underline focus-within:underline">
+            <label className="cursor-pointer font-medium text-madinah hover:underline focus-within:underline">
               {busy ? "Uploading..." : "Replace"}
               {picker}
             </label>
@@ -42,7 +42,7 @@ export default function ImageField({ value, onChange, onError }: { value: string
           </figcaption>
         </figure>
       ) : (
-        <label className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 border-dashed border-neutral-300 px-3 py-6 text-center text-sm text-neutral-600 transition-colors hover:border-emerald-500 hover:bg-emerald-50/50 focus-within:border-emerald-600">
+        <label className="flex cursor-pointer flex-col items-center gap-1 rounded-sm border-2 border-dashed border-hairline px-3 py-6 text-center text-sm text-neutral-600 transition-colors hover:border-gold hover:bg-gold/5 focus-within:border-gold">
           <IconUpload className="h-6 w-6 text-neutral-400" />
           <span className="font-medium text-neutral-800">{busy ? "Uploading..." : "Upload an image"}</span>
           <span className="text-xs text-neutral-500">JPEG, PNG, GIF or WebP, up to 4 MB</span>

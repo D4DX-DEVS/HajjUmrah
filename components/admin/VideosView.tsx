@@ -72,7 +72,7 @@ export default function VideosView({ onNotify, onError }: { onNotify: (text: str
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight">Videos <span className="text-base font-normal text-neutral-500">{videos.length}</span></h1>
+        <h1 className="font-display text-3xl font-black">Videos <span className="text-base font-normal text-neutral-500">{videos.length}</span></h1>
         <div className="flex items-center gap-3">
           {dirty && <span className="text-xs text-amber-700">Unsaved changes</span>}
           <button type="button" onClick={save} disabled={busy || !dirty} className={btnPrimary}>{busy ? "Saving..." : "Save videos"}</button>
@@ -97,11 +97,11 @@ export default function VideosView({ onNotify, onError }: { onNotify: (text: str
       </Card>
 
       {videos.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-neutral-300 py-12 text-center text-sm text-neutral-500">No videos yet.</p>
+        <p className="rounded-sm border border-dashed border-hairline py-12 text-center text-sm text-neutral-500">No videos yet.</p>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {videos.map((v) => (
-            <li key={v.slug} className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
+            <li key={v.slug} className="overflow-hidden rounded-sm border border-hairline bg-white shadow-sm">
               <YtThumb id={v.youtubeId} className="aspect-video w-full object-cover" />
               <div className="flex items-start gap-2 p-3">
                 <div className="min-w-0 flex-1">

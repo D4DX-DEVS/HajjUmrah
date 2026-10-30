@@ -1,12 +1,12 @@
 // Small shared pieces for the admin screens: class names, a labelled field, a card and a few icons.
 export const input =
-  "w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-[15px] text-neutral-900 shadow-sm placeholder:text-neutral-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20";
+  "w-full rounded-sm border border-hairline bg-white px-3 py-2 text-[15px] text-ink shadow-sm placeholder:text-neutral-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30";
 const btnBase =
-  "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:cursor-not-allowed disabled:opacity-50";
-export const btnPrimary = `${btnBase} bg-emerald-700 text-white shadow-sm hover:bg-emerald-800`;
-export const btnSecondary = `${btnBase} border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50`;
+  "inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep disabled:cursor-not-allowed disabled:opacity-50";
+export const btnPrimary = `${btnBase} bg-ink text-gold-light shadow-sm hover:bg-ink-soft`;
+export const btnSecondary = `${btnBase} border border-hairline bg-white text-ink hover:border-gold hover:bg-white`;
 export const btnDanger = `${btnBase} border border-red-200 bg-white text-red-700 hover:bg-red-50`;
-export const btnLink = "text-sm font-medium text-emerald-700 hover:underline focus-visible:outline-2 focus-visible:outline-emerald-600";
+export const btnLink = "text-sm font-semibold text-madinah hover:underline focus-visible:outline-2 focus-visible:outline-gold-deep";
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -20,17 +20,17 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
 
 export function Card({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
-      {title && <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">{title}</h3>}
+    <section className="rounded-sm border border-hairline bg-white p-4 shadow-sm">
+      {title && <h3 className="mb-3 font-display text-base font-extrabold text-ink">{title}</h3>}
       <div className="space-y-4">{children}</div>
     </section>
   );
 }
 
 export function Notice({ kind, children }: { kind: "ok" | "error"; children: React.ReactNode }) {
-  const tone = kind === "ok" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-red-200 bg-red-50 text-red-800";
+  const tone = kind === "ok" ? "border-gold/40 bg-madinah-wash text-madinah-deep" : "border-red-200 bg-red-50 text-red-800";
   return (
-    <div role={kind === "ok" ? "status" : "alert"} className={`rounded-lg border px-3 py-2 text-sm ${tone}`}>
+    <div role={kind === "ok" ? "status" : "alert"} className={`rounded-sm border px-3 py-2 text-sm ${tone}`}>
       {children}
     </div>
   );

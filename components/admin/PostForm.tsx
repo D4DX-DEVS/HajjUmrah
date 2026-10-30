@@ -163,9 +163,9 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
 
   return (
     <div>
-      <div className="sticky top-14 z-20 -mx-4 border-b border-neutral-200 bg-stone-50/90 px-4 py-2.5 backdrop-blur">
+      <div className="sticky top-14 z-20 -mx-4 border-b border-hairline bg-ihram/90 px-4 py-2.5 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-3">
-          <button type="button" onClick={back} className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100">
+          <button type="button" onClick={back} className="inline-flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100">
             <IconBack /> Posts
           </button>
           <span className="hidden text-sm text-neutral-400 sm:inline">{id != null ? "Editing post" : "New post"}</span>
@@ -191,7 +191,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
             maxLength={300}
             rows={1}
             autoFocus={id == null}
-            className="block w-full resize-none border-0 border-b-2 border-neutral-200 bg-transparent px-0 py-2 text-3xl font-bold leading-snug tracking-tight [field-sizing:content] placeholder:text-neutral-300 focus:border-emerald-600 focus:outline-none"
+            className="block w-full resize-none border-0 border-b-2 border-hairline bg-transparent px-0 py-2 font-display text-3xl font-black leading-snug [field-sizing:content] placeholder:text-neutral-300 focus:border-gold focus:outline-none"
           />
 
           <div className="text-sm text-neutral-500">
@@ -207,7 +207,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
             ) : (
               <p>
                 <span className="break-all">/{f.category}/{finalSlug || "..."}</span>{" "}
-                <button type="button" onClick={() => setSlugOpen(true)} className="font-medium text-emerald-700 hover:underline">Edit</button>
+                <button type="button" onClick={() => setSlugOpen(true)} className="font-medium text-madinah hover:underline">Edit</button>
               </p>
             )}
           </div>
@@ -233,7 +233,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
               <div className="mt-2 space-y-1.5">
                 {index.categories.filter((c) => c.slug !== f.category).map((c) => (
                   <label key={c.slug} className="flex items-center gap-2">
-                    <input type="checkbox" checked={f.extraCats.includes(c.slug)} onChange={(e) => set({ extraCats: e.target.checked ? [...f.extraCats, c.slug] : f.extraCats.filter((x) => x !== c.slug) })} className="h-4 w-4 accent-emerald-700" />
+                    <input type="checkbox" checked={f.extraCats.includes(c.slug)} onChange={(e) => set({ extraCats: e.target.checked ? [...f.extraCats, c.slug] : f.extraCats.filter((x) => x !== c.slug) })} className="h-4 w-4 accent-madinah" />
                     {c.name}
                   </label>
                 ))}
@@ -247,7 +247,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
               </select>
             </Field>
             {f.authorSel === NEW_AUTHOR && (
-              <div className="space-y-3 rounded-lg bg-neutral-50 p-3">
+              <div className="space-y-3 rounded-sm bg-neutral-50 p-3">
                 <Field label="Author name"><input value={f.newName} onChange={(e) => set({ newName: e.target.value })} className={input} /></Field>
                 <Field label="Author URL" hint="English lowercase letters, numbers and dashes, e.g. first-last">
                   <input value={f.newSlug} onChange={(e) => set({ newSlug: e.target.value.toLowerCase() })} pattern="[a-z0-9]+(-[a-z0-9]+)*" className={input} />

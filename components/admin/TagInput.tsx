@@ -18,9 +18,9 @@ export default function TagInput({ value, onChange, suggestions }: { value: stri
       {value.length > 0 && (
         <ul className="mb-2 flex flex-wrap gap-1.5">
           {value.map((t) => (
-            <li key={t} className="inline-flex items-center gap-1 rounded-full bg-emerald-50 py-0.5 pl-2.5 pr-1 text-sm text-emerald-900">
+            <li key={t} className="inline-flex items-center gap-1 rounded-full bg-madinah-wash py-0.5 pl-2.5 pr-1 text-sm text-madinah-deep">
               {t}
-              <button type="button" onClick={() => onChange(value.filter((v) => v !== t))} aria-label={`Remove tag ${t}`} className="-my-1.5 rounded-full p-2 text-emerald-700 hover:bg-emerald-100">
+              <button type="button" onClick={() => onChange(value.filter((v) => v !== t))} aria-label={`Remove tag ${t}`} className="-my-1.5 rounded-full p-2 text-madinah hover:bg-gold/20">
                 <IconX className="h-3 w-3" />
               </button>
             </li>

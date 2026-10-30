@@ -18,9 +18,9 @@ export default function BodyEditor({ value, mode, onChange, onMode }: { value: s
   return (
     <div>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <div className="inline-flex gap-1 rounded-lg bg-neutral-100 p-1">{tabBtn("write", "Write")}{tabBtn("preview", "Preview")}</div>
+        <div className="inline-flex gap-1 rounded-sm bg-neutral-100 p-1">{tabBtn("write", "Write")}{tabBtn("preview", "Preview")}</div>
         {mode === "text" ? (
-          <button type="button" onClick={() => onMode("html", plainToHtml(value))} className="text-sm text-neutral-500 hover:text-emerald-700 hover:underline">
+          <button type="button" onClick={() => onMode("html", plainToHtml(value))} className="text-sm text-neutral-500 hover:text-madinah hover:underline">
             Edit as HTML
           </button>
         ) : (
@@ -43,7 +43,7 @@ export default function BodyEditor({ value, mode, onChange, onMode }: { value: s
           title="Preview"
           sandbox=""
           srcDoc={`<!doctype html><meta charset="utf-8"><base target="_blank"><style>body{font:18px/1.9 system-ui,sans-serif;max-width:42rem;margin:1rem auto;padding:0 1rem;color:#262626}img,iframe,video{max-width:100%;height:auto}a{color:#047857}</style>${html || "<p style='color:#888'>Nothing to preview yet.</p>"}`}
-          className="min-h-[22rem] w-full rounded-lg border border-neutral-300 bg-white"
+          className="min-h-[22rem] w-full rounded-sm border border-hairline bg-white"
         />
       )}
       {mode === "html" && tab === "write" && <p className="mt-1 text-xs text-neutral-500">Scripts, event handlers and unsafe links are removed when you save.</p>}

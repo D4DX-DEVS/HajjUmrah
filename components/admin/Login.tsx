@@ -24,9 +24,9 @@ export default function Login({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-5 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
+      <form onSubmit={submit} className="w-full max-w-sm space-y-5 rounded-sm border border-hairline border-t-2 border-t-gold bg-white p-6 shadow-sm sm:p-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Admin</h1>
+          <h1 className="font-display text-3xl font-black">Admin</h1>
           <p className="mt-1 text-sm text-neutral-500">Sign in to manage posts and videos.</p>
         </div>
         <label className="block">
