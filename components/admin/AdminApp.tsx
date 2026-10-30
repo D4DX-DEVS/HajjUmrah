@@ -1,11 +1,12 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, api, type Index } from "./api";
 import Login from "./Login";
 import PostForm from "./PostForm";
 import PostsList from "./PostsList";
 import VideosView from "./VideosView";
-import { IconExternal, IconX } from "./ui";
+import { IconExternal, IconList, IconLogout, IconPlay, IconPlus, IconX } from "./ui";
 
 type View = { name: "posts" } | { name: "videos" } | { name: "post"; id?: number };
 type Toast = { text: string; href?: string };
@@ -15,6 +16,7 @@ export default function AdminApp() {
   const [index, setIndex] = useState<Index | null>(null);
   const [view, setView] = useState<View>({ name: "posts" });
   const [toast, setToast] = useState<Toast | null>(null);
+  const scroller = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     api("session").then(() => setAuth("in")).catch(() => setAuth("out"));
@@ -47,42 +49,51 @@ export default function AdminApp() {
     history.pushState({ post: true }, "");
     setView({ name: "post", id });
   };
+  // the page scrolls inside the admin shell, so go back to the top when the screen changes
+  useEffect(() => {
+    scroller.current?.scrollTo(0, 0);
+  }, [view.name]);
   const closePost = () => (history.state?.post ? history.back() : setView({ name: "posts" }));
 
   if (auth === "checking") return <p className="py-20 text-center text-sm text-neutral-500">Loading...</p>;
   if (auth === "out") return <Login onDone={() => setAuth("in")} />;
   if (!index) return <p className="py-20 text-center text-sm text-neutral-500">Loading site data...</p>;
 
-  const tab = (name: "posts" | "videos", label: string) => {
-    const on = view.name === name || (name === "posts" && view.name === "post");
-    return (
-      <button
-        onClick={() => setView(name === "posts" ? { name: "posts" } : { name: "videos" })}
-        aria-current={on ? "page" : undefined}
-        className={`relative px-3 py-2 text-sm font-semibold transition-colors ${on ? "text-gold-light after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-gold" : "text-white/70 hover:text-white"}`}
-      >
-        {label}
-      </button>
-    );
-  };
+  const item = (on: boolean, label: string, icon: React.ReactNode, onClick: () => void) => (
+    <button
+      onClick={onClick}
+      aria-current={on ? "page" : undefined}
+      className={`flex shrink-0 items-center gap-3 rounded-sm border px-3 py-2.5 text-sm font-semibold transition-colors ${on ? "border-gold bg-gold/10 text-gold-deep" : "border-transparent text-neutral-700 hover:bg-sand"}`}
+    >
+      {icon} {label}
+    </button>
+  );
+  const link = "flex shrink-0 items-center gap-3 rounded-sm border border-transparent px-3 py-2.5 text-sm font-semibold text-neutral-700 transition-colors hover:bg-sand";
 
   return (
-    <div>
-      <header className="sticky top-0 z-30 -mx-4 -mt-6 bg-ink shadow-[0_1px_0_0_var(--color-gold)] sm:-mt-10">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4">
-          <span className="mr-3 font-display text-lg font-black text-gold-light">Admin</span>
-          <nav aria-label="Admin" className="flex gap-1">{tab("posts", "Posts")}{tab("videos", "Videos")}</nav>
-          <div className="ml-auto flex items-center gap-4">
-            <a href="/" target="_blank" rel="noreferrer" className="hidden items-center gap-1 text-sm font-semibold text-white/70 hover:text-white sm:inline-flex">View site <IconExternal /></a>
-            <button onClick={logout} className="-my-2 py-3 text-sm font-semibold text-white/70 hover:text-gold-light">Log out</button>
+    <div className="fixed inset-0 z-40 flex flex-col bg-ihram md:flex-row">
+      <aside className="shrink-0 border-b border-hairline bg-white md:flex md:w-64 md:flex-col md:border-b-0 md:border-r">
+        <div className="flex items-center gap-1 overflow-x-auto px-3 py-2 md:flex-1 md:flex-col md:items-stretch md:gap-1 md:overflow-visible md:p-5">
+          <div className="mr-2 shrink-0 md:mb-6 md:mr-0 md:px-1">
+            <Image src="/uploads/2022/06/logo-hajj.png" alt="Hajj and Umrah" width={300} height={112} className="h-9 w-auto md:h-12" />
+            <p className="mt-1 hidden text-xs font-semibold uppercase tracking-widest text-neutral-500 md:block">Admin</p>
           </div>
+          <nav aria-label="Admin" className="flex items-center gap-1 md:flex-col md:items-stretch">
+            {item(view.name === "posts" || (view.name === "post" && view.id != null), "Posts", <IconList className="h-5 w-5" />, () => setView({ name: "posts" }))}
+            {item(view.name === "videos", "Videos", <IconPlay className="h-5 w-5" />, () => setView({ name: "videos" }))}
+            {item(view.name === "post" && view.id == null, "New post", <IconPlus className="h-5 w-5" />, () => openPost())}
+            <a href="/" target="_blank" rel="noreferrer" className={link}><IconExternal className="h-5 w-5" /> View site</a>
+          </nav>
+          <button onClick={logout} className={`${link} ml-auto md:mt-auto`}><IconLogout className="h-5 w-5" /> Log out</button>
         </div>
-      </header>
+      </aside>
 
-      <div className="pt-6">
-        {view.name === "posts" && <PostsList index={index} onOpen={openPost} />}
-        {view.name === "post" && <PostForm key={view.id ?? "new"} index={index} id={view.id} onBack={closePost} onNotify={notify} onError={guard} />}
-        {view.name === "videos" && <VideosView onNotify={notify} onError={guard} />}
+      <div ref={scroller} id="admin-scroll" className="min-w-0 flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
+          {view.name === "posts" && <PostsList index={index} onOpen={openPost} />}
+          {view.name === "post" && <PostForm key={view.id ?? "new"} index={index} id={view.id} onBack={closePost} onNotify={notify} onError={guard} />}
+          {view.name === "videos" && <VideosView onNotify={notify} onError={guard} />}
+        </div>
       </div>
 
       {toast && (

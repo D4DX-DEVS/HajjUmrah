@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { Index } from "./api";
-import { IconChevron, IconPlus, IconSearch, btnPrimary, input } from "./ui";
+import { IconPlus, IconSearch, btnPrimary, btnSecondary, input } from "./ui";
 
 const PAGE = 30;
 
@@ -17,8 +17,8 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="font-display text-3xl font-black">Posts</h2>
-          <p className="text-sm text-neutral-500">{index.posts.length} published. Changes you save appear here after the site rebuilds.</p>
+          <h2 className="font-display text-3xl font-black">Posts <span className="text-xl font-bold text-neutral-400">({index.posts.length})</span></h2>
+          <p className="text-sm text-neutral-500">Changes you save appear here after the site rebuilds.</p>
         </div>
         <button onClick={() => onOpen()} className={btnPrimary}><IconPlus /> New post</button>
       </div>
@@ -38,23 +38,27 @@ export default function PostsList({ index, onOpen }: { index: Index; onOpen: (id
         </label>
       </div>
 
-      <ul className="divide-y divide-neutral-100 overflow-hidden rounded-sm border border-hairline bg-white shadow-sm">
-        {rows.slice(0, shown).map((p) => (
-          <li key={p.id}>
-            <button onClick={() => onOpen(p.id)} className="group flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-madinah-wash/60 focus-visible:bg-madinah-wash focus-visible:outline-none">
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium text-neutral-900">{p.title}</span>
-                <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-neutral-500">
-                  <span className="rounded-full bg-madinah-wash px-2 py-0.5 font-medium text-madinah-deep">{catName(p.category)}</span>
-                  <span>{p.date.slice(0, 10)}</span>
-                </span>
+      <div className="overflow-hidden rounded-sm border border-hairline bg-white shadow-sm">
+        <div className="hidden grid-cols-[minmax(0,1fr)_10rem_7.5rem_9.5rem] gap-4 border-b border-hairline bg-sand/50 px-4 py-3 text-sm font-bold text-ink xl:grid">
+          <span>Title</span><span>Category</span><span>Date</span><span className="sr-only">Actions</span>
+        </div>
+        <ul className="divide-y divide-hairline">
+          {rows.slice(0, shown).map((p) => (
+            <li key={p.id} className="grid items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-madinah-wash/40 xl:grid-cols-[minmax(0,1fr)_10rem_7.5rem_9.5rem]">
+              <span className="line-clamp-2 font-medium text-neutral-900 [overflow-wrap:anywhere]">{p.title}</span>
+              <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-600 xl:contents">
+                <span className="xl:truncate">{catName(p.category)}</span>
+                <span className="tabular-nums">{p.date.slice(0, 10)}</span>
               </span>
-              <IconChevron className="h-4 w-4 text-neutral-300 group-hover:text-madinah" />
-            </button>
-          </li>
-        ))}
-        {!rows.length && <li className="px-4 py-10 text-center text-sm text-neutral-500">No posts match your search.</li>}
-      </ul>
+              <span className="flex gap-2 xl:justify-end">
+                <button onClick={() => onOpen(p.id)} className={`${btnSecondary} px-3 py-1.5`}>Edit</button>
+                <a href={`/${p.category}/${p.slug}`} target="_blank" rel="noreferrer" className={`${btnSecondary} px-3 py-1.5`}>View</a>
+              </span>
+            </li>
+          ))}
+          {!rows.length && <li className="px-4 py-10 text-center text-sm text-neutral-500">No posts match your search.</li>}
+        </ul>
+      </div>
 
       {rows.length > shown && (
         <div className="text-center">

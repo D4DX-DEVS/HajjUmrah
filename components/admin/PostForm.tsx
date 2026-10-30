@@ -111,13 +111,16 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
       });
       setId(r.id);
       setSha(r.sha);
-      setBaseline(JSON.stringify(f));
+      // lock in the URL that was just published, so a later edit of the title does not rename it
+      const saved = { ...f, slug: finalSlug };
+      setF(saved);
+      setBaseline(JSON.stringify(saved));
       setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
       onNotify(id != null ? "Changes saved. The site updates in about 2-3 minutes." : "Post published. The site updates in about 2-3 minutes.", r.commitUrl);
     } catch (x) {
       onError(x);
       setErr((x as Error).message);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      document.getElementById("admin-scroll")?.scrollTo({ top: 0, behavior: "smooth" });
     }
     setBusy(false);
   }
@@ -163,7 +166,7 @@ export default function PostForm({ index, id: initialId, onBack, onNotify, onErr
 
   return (
     <div>
-      <div className="sticky top-14 z-20 -mx-4 border-b border-hairline bg-ihram/90 px-4 py-2.5 backdrop-blur">
+      <div className="sticky top-0 z-20 -mx-4 -mt-6 border-b border-hairline bg-ihram/90 px-4 py-2.5 sm:-mx-8 sm:-mt-8 sm:px-8 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-3">
           <button type="button" onClick={back} className="inline-flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100">
             <IconBack /> Posts
