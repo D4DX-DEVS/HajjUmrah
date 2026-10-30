@@ -3,9 +3,9 @@ import Link from "next/link";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import { decode, fmtDate, postHref, type Post } from "@/lib/data";
 
-export default function PostRow({ post }: { post: Post }) {
+export default function PostRow({ post, className = "" }: { post: Post; className?: string }) {
   return (
-    <article className="group relative flex items-center gap-4 py-4 lg:flex-1">
+    <article className={`group relative items-center gap-4 py-4 lg:flex-1 ${className || "flex"}`}>
       <Link href={postHref(post)} tabIndex={-1} aria-hidden className="relative block h-24 w-32 shrink-0 lg:h-28 lg:w-40 overflow-hidden bg-madinah-wash">
         {post.image ? <Image src={post.image} alt="" fill sizes="128px" className="object-cover transition duration-700 ease-out group-hover:scale-105" /> : <ImagePlaceholder />}
       </Link>

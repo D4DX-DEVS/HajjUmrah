@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import HideOnScroll from "@/components/HideOnScroll";
 import NavLink from "@/components/NavLink";
 import { allCategories } from "@/lib/data";
 
@@ -8,10 +9,10 @@ const cats = order.map((s) => allCategories.find((c) => c.slug === s)).filter((c
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-20 border-b border-hairline bg-ihram/90 shadow-[0_1px_0_0_var(--color-gold-light)] backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 xl:flex-nowrap xl:gap-x-3 px-4 py-2">
+    <HideOnScroll className="sticky top-0 z-20 border-b border-hairline bg-ihram/90 shadow-[0_1px_0_0_var(--color-gold-light)] backdrop-blur">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 xl:flex-nowrap xl:gap-x-3 px-4 py-1.5 sm:py-2">
         <Link href="/" aria-label="Hajj and Umrah home" className="shrink-0">
-          <Image src="/uploads/2022/06/logo-hajj.png" alt="Hajj and Umrah" width={300} height={112} priority className="h-11 w-auto" />
+          <Image src="/uploads/2022/06/logo-hajj.png" alt="Hajj and Umrah" width={300} height={112} priority className="h-9 w-auto sm:h-11" />
         </Link>
         <form action="/search" role="search" className="order-2 ml-auto flex xl:order-3">
           <input
@@ -33,6 +34,6 @@ export default function Header() {
           <NavLink href="/contact">Contact</NavLink>
         </nav>
       </div>
-    </header>
+    </HideOnScroll>
   );
 }

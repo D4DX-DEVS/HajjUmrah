@@ -52,7 +52,7 @@ export function HajjUmrah({ posts }: { posts: Post[] }) {
         <div className="lg:col-span-3"><PostCard post={lead} lead /></div>
         <ol className="flex flex-col divide-y divide-hairline lg:col-span-2">
           {rest.map((p, i) => (
-            <li key={p.id} className="group relative flex items-center gap-4 py-4 first:pt-0">
+            <li key={p.id} className={`group relative items-center gap-4 py-4 first:pt-0 ${i >= 2 ? "hidden lg:flex" : "flex"}`}>
               <span aria-hidden className="w-10 shrink-0 font-display text-3xl font-black text-gold-deep/70">{String(i + 1).padStart(2, "0")}</span>
               <Pic post={p} sizes="96px" className="h-16 w-24 shrink-0" />
               <div className="min-w-0">
@@ -82,7 +82,7 @@ export function Articles({ posts, title, href }: { posts: Post[]; title: string;
       <SectionHeader title={title} blurb={BLURBS.articles} href={href} />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <div className={rest.length ? "lg:col-span-3" : "lg:col-span-5"}><PostCard post={lead} lead wide={!rest.length} /></div>
-        {rest.length > 0 && <div className="flex flex-col divide-y divide-hairline lg:col-span-2">{rest.map((p) => <PostRow key={p.id} post={p} />)}</div>}
+        {rest.length > 0 && <div className="flex flex-col divide-y divide-hairline lg:col-span-2">{rest.map((p, i) => <PostRow key={p.id} post={p} className={i >= 2 ? "hidden lg:flex" : "flex"} />)}</div>}
       </div>
     </Band>
   );
@@ -101,8 +101,8 @@ export function Fatwa({ posts, title, href }: { posts: Post[]; title: string; hr
           <span className="absolute inset-x-0 bottom-0 block p-5 font-display text-xl font-extrabold leading-snug text-white"><span className="sweep pb-1">{decode(lead.title)}</span></span>
         </Link>
         <ul className="flex flex-col gap-3 lg:col-span-3">
-          {rest.map((p) => (
-            <li key={p.id} className="group relative flex items-center gap-4 border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10">
+          {rest.map((p, i) => (
+            <li key={p.id} className={`group relative items-center gap-4 border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 ${i >= 3 ? "hidden lg:flex" : "flex"}`}>
               <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold font-display text-lg font-black text-ink">?</span>
               <div className="min-w-0 flex-1">
                 <h3 className="line-clamp-2 font-semibold leading-snug"><Link href={postHref(p)} className="after:absolute after:inset-0">{decode(p.title)}</Link></h3>
@@ -124,7 +124,7 @@ export function Rituals({ posts, title, href }: { posts: Post[]; title: string; 
       <SectionHeader title={title} blurb={BLURBS.rituals} href={href} />
       <ol className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
         {posts.map((p, i) => (
-          <li key={p.id} className="group relative">
+          <li key={p.id} className={`group relative ${i >= 4 ? "hidden sm:block" : ""}`}>
             <div className="relative">
               <Pic post={p} sizes="(min-width:1024px) 16vw, 45vw" className="aspect-[4/3]" />
               <span aria-hidden className="absolute -bottom-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-ink text-xs font-bold text-gold-light ring-2 ring-ihram">{String(i + 1).padStart(2, "0")}</span>
@@ -154,8 +154,8 @@ export function Fiqh({ posts, title, href }: { posts: Post[]; title: string; hre
           </span>
         </Link>
         <ul className="flex flex-col divide-y divide-white/10 lg:col-span-2">
-          {rest.map((p) => (
-            <li key={p.id} className="group relative flex items-center gap-4 py-4 first:pt-0">
+          {rest.map((p, i) => (
+            <li key={p.id} className={`group relative items-center gap-4 py-4 first:pt-0 ${i >= 3 ? "hidden lg:flex" : "flex"}`}>
               <div className="min-w-0 flex-1">
                 <h3 className="line-clamp-2 font-semibold leading-snug"><Link href={postHref(p)} className="after:absolute after:inset-0">{decode(p.title)}</Link></h3>
                 <p className="mt-0.5 text-sm text-white/65">{fmtDate(p.date)}</p>
@@ -172,8 +172,8 @@ export function Fiqh({ posts, title, href }: { posts: Post[]; title: string; hre
 // History & Culture: a wide lead picture and smaller story tiles.
 export function History({ posts, title, href }: { posts: Post[]; title: string; href: string }) {
   const [lead, ...rest] = posts;
-  const tile = (p: Post, big?: boolean) => (
-    <Link key={p.id} href={postHref(p)} className={`group relative block overflow-hidden bg-ink ${big ? "min-h-80 sm:col-span-2" : "min-h-56"}`}>
+  const tile = (p: Post, big?: boolean, hideOnPhone?: boolean) => (
+    <Link key={p.id} href={postHref(p)} className={`group relative overflow-hidden bg-ink ${hideOnPhone ? "hidden sm:block" : "block"} ${big ? "min-h-80 sm:col-span-2" : "min-h-56"}`}>
       <Pic post={p} sizes={big ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"} className="absolute inset-0 opacity-90" />
       <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
       <span className={`absolute inset-x-0 bottom-0 block p-4 font-display font-extrabold leading-snug text-white ${big ? "text-xl sm:text-2xl" : "line-clamp-3 text-base"}`}><span className="sweep pb-0.5">{decode(p.title)}</span></span>
@@ -184,7 +184,7 @@ export function History({ posts, title, href }: { posts: Post[]; title: string; 
       <SectionHeader title={title} blurb={BLURBS["history-culture"]} href={href} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {tile(lead, true)}
-        {rest.map((p) => tile(p))}
+        {rest.map((p, i) => tile(p, false, i >= 2))}
       </div>
     </Band>
   );
@@ -205,8 +205,8 @@ export function Videos() {
           <p className="mt-1 text-sm text-white/65">{fmtDate(lead.date)}</p>
         </div>
         <ul className="flex flex-col gap-4 lg:col-span-2">
-          {rest.map((v) => (
-            <li key={v.slug} className="group relative flex items-center gap-4">
+          {rest.map((v, i) => (
+            <li key={v.slug} className={`group relative items-center gap-4 ${i >= 2 ? "hidden lg:flex" : "flex"}`}>
               <YtThumb id={v.youtubeId!} className="aspect-video w-32 shrink-0 object-cover" />
               <div className="min-w-0">
                 <h3 className="line-clamp-2 font-semibold leading-snug"><Link href={`/video/${v.slug}`} className="after:absolute after:inset-0">{decode(v.title)}</Link></h3>

@@ -27,7 +27,7 @@ function Tile({ post, big }: { post: Post; big?: boolean }) {
           </>
         ) : (
           <div className="rise mt-3 flex items-center justify-between gap-3 text-sm text-white/75" style={delay(2)}>
-            <span>{fmtDate(post.date)}</span>
+            <span><span className="sm:hidden">{new Date(post.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span><span className="hidden sm:inline">{fmtDate(post.date)}</span></span>
             <span aria-hidden className="flex h-8 w-8 items-center justify-center rounded-full border border-gold text-gold-light transition-colors group-hover:bg-gold group-hover:text-ink">→</span>
           </div>
         )}
