@@ -62,3 +62,6 @@ html { color-scheme: light; scroll-behavior: smooth; font-size: 106.25%; }
 
 /* Full-width bands on the home page. */
 .bleed { position: relative; left: 50%; width: 100vw; margin-left: -50vw; }
+
+/* Short screens (phones on their side): a pinned header would eat a third of the view, so let it scroll away. */
+@media (max-height: 520px) { .site-header { position: relative; } }

@@ -13,7 +13,7 @@ const head = (t: string) => (
 function Story({ post }: { post: Post }) {
   return (
     <li className="group relative flex gap-3 py-3 first:pt-0 last:pb-0">
-      <span className="relative block h-16 w-20 shrink-0 overflow-hidden bg-madinah-wash">
+      <span className="relative block h-[64px] w-[80px] shrink-0 overflow-hidden bg-madinah-wash">
         {post.image ? <Image src={post.image} alt="" fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" /> : <ImagePlaceholder />}
       </span>
       <div className="min-w-0">
@@ -69,7 +69,7 @@ export default function ArticleSidebar({ post, headings }: { post: Post; heading
           <ul className="divide-y divide-hairline">
             {videos.map((v) => (
               <li key={v.slug} className="group relative flex gap-3 py-3 first:pt-0 last:pb-0">
-                <YtThumb id={v.youtubeId!} className="aspect-video w-24 shrink-0 object-cover" />
+                <YtThumb id={v.youtubeId!} className="aspect-video w-[96px] shrink-0 object-cover" />
                 <div className="min-w-0">
                   <h3 className="line-clamp-3 text-sm font-bold leading-snug"><Link href={`/video/${v.slug}`} className="after:absolute after:inset-0">{decode(v.title)}</Link></h3>
                   <p className="mt-1 text-xs text-neutral-600">{fmtDate(v.date)}</p>

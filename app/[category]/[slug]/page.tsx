@@ -61,8 +61,8 @@ export default async function PostPage({ params }: PageProps<"/[category]/[slug]
           <h1 className="mt-4 font-display text-2xl font-extrabold leading-snug sm:text-4xl">{decode(post.title)}</h1>
           <span className="rule mt-5 block h-0.5 w-20 bg-gold" aria-hidden />
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-sm text-neutral-600">
-              <span aria-hidden className="flex h-10 w-10 items-center justify-center rounded-full bg-ink font-display text-base font-black text-gold-light">{[...post.author.name][0]}</span>
+            <div className="flex min-w-0 items-center gap-3 text-sm text-neutral-600">
+              <span aria-hidden className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-ink font-display text-base font-black text-gold-light">{[...post.author.name][0]}</span>
               <p>
                 <Link href={`/author/${post.author.slug}`} className="block py-1.5 font-semibold text-ink hover:text-madinah">{post.author.name}</Link>
                 {fmtDate(post.date)} · {minutes} min read

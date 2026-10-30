@@ -54,7 +54,7 @@ export function HajjUmrah({ posts }: { posts: Post[] }) {
           {rest.map((p, i) => (
             <li key={p.id} className={`group relative items-center gap-4 py-4 first:pt-0 ${i >= 2 ? "hidden lg:flex" : "flex"}`}>
               <span aria-hidden className="w-10 shrink-0 font-display text-3xl font-black text-gold-deep/70">{String(i + 1).padStart(2, "0")}</span>
-              <Pic post={p} sizes="96px" className="h-16 w-24 shrink-0" />
+              <Pic post={p} sizes="96px" className="h-[64px] w-[96px] shrink-0" />
               <div className="min-w-0">
                 <h3 className="line-clamp-2 font-display text-base font-extrabold leading-snug"><Link href={postHref(p)} className="after:absolute after:inset-0"><span className="sweep pb-0.5">{decode(p.title)}</span></Link></h3>
                 <p className="mt-1 text-sm text-neutral-600">{fmtDate(p.date)}</p>
@@ -207,7 +207,7 @@ export function Videos() {
         <ul className="flex flex-col gap-4 lg:col-span-2">
           {rest.map((v, i) => (
             <li key={v.slug} className={`group relative items-center gap-4 ${i >= 2 ? "hidden lg:flex" : "flex"}`}>
-              <YtThumb id={v.youtubeId!} className="aspect-video w-32 shrink-0 object-cover" />
+              <YtThumb id={v.youtubeId!} className="aspect-video w-[128px] shrink-0 object-cover" />
               <div className="min-w-0">
                 <h3 className="line-clamp-2 font-semibold leading-snug"><Link href={`/video/${v.slug}`} className="after:absolute after:inset-0">{decode(v.title)}</Link></h3>
                 <p className="mt-0.5 text-sm text-white/65">{fmtDate(v.date)}</p>

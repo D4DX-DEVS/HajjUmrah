@@ -17,7 +17,7 @@ export default function HideOnScroll({ className, children }: { className: strin
     return () => window.removeEventListener("scroll", on);
   }, []);
   return (
-    <header onFocusCapture={() => setHidden(false)} className={`${className} transition-transform duration-300 ${hidden ? "max-md:-translate-y-full" : ""}`}>
+    <header onFocusCapture={() => setHidden(false)} className={`${className} transition-transform duration-300 ${hidden ? "max-xl:-translate-y-full" : ""}`}>
       {children}
     </header>
   );
