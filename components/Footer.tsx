@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { allCategories } from "@/lib/data";
 
-const link = "inline-block py-1 text-white/75 transition-colors hover:text-gold-light";
+const link = "inline-block py-2.5 text-white/75 transition-colors hover:text-gold-light";
 const head = "font-display text-base font-extrabold text-gold-light";
 
 export default function Footer() {
@@ -15,7 +15,7 @@ export default function Footer() {
         </div>
         <nav aria-label="Categories">
           <p className={head}>Categories</p>
-          <ul className="mt-3 space-y-0.5">
+          <ul className="mt-2 space-y-0">
             {allCategories.map((c) => (
               <li key={c.slug}><Link href={`/${c.slug}`} className={link}>{c.name}</Link></li>
             ))}
@@ -23,7 +23,7 @@ export default function Footer() {
         </nav>
         <nav aria-label="Site">
           <p className={head}>Site</p>
-          <ul className="mt-3 space-y-0.5">
+          <ul className="mt-2 space-y-0">
             <li><Link href="/videos" className={link}>Videos</Link></li>
             <li><Link href="/about" className={link}>About</Link></li>
             <li><Link href="/contact" className={link}>Contact</Link></li>
