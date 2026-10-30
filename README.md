@@ -53,7 +53,7 @@ Notes:
 
 ## Content
 
-`content/*.json` is only the seed for `scripts/seed-d1.mjs` (the original WordPress export). **D1 is the source of truth**: edits in the admin never reach those files,. `scripts/export.mjs` and `scripts/sync-extras.mjs` were the one-off WordPress import; do not re-run them.
+`content/*.json` is only the seed for `scripts/seed-d1.mjs` (the original WordPress export). **D1 is the source of truth**: edits in the admin never reach those files. `scripts/export.mjs` and `scripts/sync-extras.mjs` were the one-off WordPress import; do not re-run them.
 
 ## Contact messages (D1)
 
