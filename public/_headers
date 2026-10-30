@@ -1,0 +1,11 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+/_next/static/*
+  Cache-Control: public,max-age=31536000,immutable
+
+# Uploaded images never change under the same name.
+/uploads/*
+  Cache-Control: public,max-age=31536000,immutable

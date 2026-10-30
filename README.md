@@ -1,47 +1,44 @@
 # Hajj and Umrah (hajj.islamonlive.in)
 
-Next.js 16 copy of the WordPress site, hosted on **Vercel**. Pages are prerendered at build time from `content/*.json` (posts are one file each in `content/posts/<id>.json`); only `/api/*` runs as Vercel Functions. Data services stay on Cloudflare: **D1** (database) and **R2** (images), reached over their HTTP APIs.
+Next.js 16 copy of the WordPress site, hosted on **Cloudflare**. `next build` exports plain HTML into `out/`, served as free static assets; only `/api/*` runs as a Worker (`worker/index.ts`). Content lives in `content/*.json` (posts are one file each in `content/posts/<id>.json`). Data: **D1** (database) and **R2** (images), both bound to the Worker.
 
 ## Run
 
 ```bash
-npm run dev     # dev server
-npm run build   # production build
-npm start       # serve the build
+npm run dev       # dev server (pages only; /api/* needs the Worker)
+npm run build     # static export into out/
+npm run preview   # build, then run the site and APIs locally with wrangler (local D1/R2)
+npm run deploy    # build, then deploy the Worker + assets
 ```
 
-## Deploy (Vercel)
+## Deploy (Cloudflare)
 
-1. vercel.com → Add New → Project → import `D4DX-DEVS/HajjUmrah` (allow Vercel to read the GitHub organization). Next.js is detected; keep the default build settings.
-2. Project → Settings → Environment Variables: add the variables below (Production and Preview). You can paste the contents of your local `.env`.
-3. Deploy. From then on every push to `main` deploys automatically, including the commits the admin makes.
-4. Domain: Settings → Domains → add `hajj.islamonlive.in`, then create the DNS record Vercel shows (a `CNAME` to `cname.vercel-dns.com`). DNS can stay where it is; it does not need to move to Cloudflare.
+Worker `hajj-next` (`wrangler.jsonc`). Redirects and headers live in `public/_redirects` and `public/_headers`.
 
-Without the GitHub connection (step 1 needs a GitHub "Login Connection" on the Vercel account), deploy from this folder with `npx vercel@latest deploy --prod`. The project is `d4-dx2/hajj-next`; its production address is https://hajj-next.vercel.app.
-
-Notes: images are served as the original files (`images.unoptimized`, so no Vercel image quota is used). Vercel's free Hobby plan is for non-commercial use; check their terms for your case. Function request bodies are limited to 4.5 MB, hence the 4 MB image upload limit in the admin.
+1. `npx wrangler login`, then `npm run deploy`. Bindings `DB` (D1 `hajjumra`) and `MEDIA` (R2 `hajjumra`) and the vars come from `wrangler.jsonc`.
+2. Secrets (`npx wrangler secret put NAME`, or dashboard → Worker → Settings → Variables and Secrets): `ADMIN_PASSWORD`, `GITHUB_TOKEN`, optional `CONTACT_WEBHOOK_URL`.
+3. Git deploys: dashboard → Workers & Pages → `hajj-next` → Settings → Builds → connect `D4DX-DEVS/HajjUmrah` (build `npm run build`, deploy `npx wrangler deploy`, build variable `NEXT_PUBLIC_MEDIA_URL` if used). After that every push to `main` deploys, including the commits the admin makes.
+4. Domain: Worker → Settings → Domains & Routes → add `hajj.islamonlive.in` (the zone must be on Cloudflare).
 
 ## Environment variables
 
 | Variable | Used for |
 |---|---|
-| `CLOUDFLARE_ACCOUNT_ID`, `D1_DATABASE_ID`, `CLOUDFLARE_API_TOKEN` | D1 over its REST API (contact messages, admin login lockout). Use a token with only **D1: Edit**. |
-| `R2_ENDPOINT`, `R2_BUCKET_NAME`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | R2 over its S3 API (admin image upload; also `scripts/upload-r2.mjs`). `R2_ACCOUNT_ID` is not needed. |
-| `ADMIN_PASSWORD` | Admin login (16+ characters). Changing it logs everyone out. |
-| `GITHUB_TOKEN`, `GITHUB_REPO` (`D4DX-DEVS/HajjUmrah`), `GITHUB_BRANCH` (`main`) | The admin saves posts as commits. Token: fine-grained, only this repo, **Contents: Read and write**. |
-| `NEXT_PUBLIC_MEDIA_URL` | **Build time.** Public address of the R2 bucket, no trailing slash. When set, post images load from `<url>/uploads/...`. |
-| `MEDIA_URL` | Optional. Address used for image previews in the admin (defaults to `NEXT_PUBLIC_MEDIA_URL`). |
-| `CONTACT_WEBHOOK_URL` | Optional. The contact form also POSTs `{name, email, message}` JSON here (Formspree, Zapier...). |
+| `ADMIN_PASSWORD` (secret) | Admin login (16+ characters). Changing it logs everyone out. |
+| `GITHUB_TOKEN` (secret), `GITHUB_REPO`, `GITHUB_BRANCH` | The admin saves posts as commits. Token: fine-grained, only this repo, **Contents: Read and write**. Repo and branch are in `wrangler.jsonc`. |
+| `MEDIA_URL` | Public address of the R2 bucket, for image previews in the admin (`wrangler.jsonc`). |
+| `NEXT_PUBLIC_MEDIA_URL` | **Build time.** Same address, no trailing slash. When set, post images load from `<url>/uploads/...`. |
+| `CONTACT_WEBHOOK_URL` (secret) | Optional. The contact form also POSTs `{name, email, message}` JSON here (Formspree, Zapier...). |
 
 The local `.env` is git-ignored. `GITHUB_API` exists only for tests.
 
 ## Admin (`/admin`)
 
-A password-protected page to add, edit and delete posts and manage the Videos list, with image upload. Saving a post **commits a JSON file to GitHub** (`content/posts/<id>.json`); the Vercel Git deploy then rebuilds the site, so a change is live a couple of minutes later. The footer has an "Admin" link.
+A password-protected page to add, edit and delete posts and manage the Videos list, with image upload. Saving a post **commits a JSON file to GitHub** (`content/posts/<id>.json`); the connected Git deploy then rebuilds the site, so a change is live a couple of minutes later. The footer has an "Admin" link.
 
-How it works: the page is static; `/api/admin/*` (`lib/server/admin.ts`) checks a signed login cookie, validates and sanitizes the post, and writes to GitHub with the token. Images go to R2. 5 wrong passwords from one address lock it out for 15 minutes (counted in D1).
+How it works: the page is static; `/api/admin/*` (`lib/server/admin.ts`, run by the Worker) checks a signed login cookie, validates and sanitizes the post, and writes to GitHub with the token. Images go to R2. 5 wrong passwords from one address lock it out for 15 minutes (counted in D1).
 
-Setup: create the GitHub token and set `ADMIN_PASSWORD` / `GITHUB_TOKEN` in Vercel, run `npm run db:migrate` once (adds the `admin_login_attempts` table), then open `https://<your-site>/admin`.
+Setup: create the GitHub token and set the `ADMIN_PASSWORD` / `GITHUB_TOKEN` secrets, run `npm run db:migrate` once (adds the `admin_login_attempts` table), then open `https://<your-site>/admin`.
 
 Notes:
 - The admin hides the public header and footer. The editor has a Posts back link (the browser Back button works too), a Ctrl+S shortcut and an "Unsaved changes" warning.
@@ -82,10 +79,10 @@ Pushing to `main` deploys the site, so a new post goes live a couple of minutes 
 
 ## Contact messages (Cloudflare D1)
 
-Each contact-form message is saved in the `contact_messages` table of the D1 database `hajjumra`, and also forwarded to `CONTACT_WEBHOOK_URL` if set. If neither is available the form returns 503. `wrangler.jsonc` is only used by these two commands:
+Each contact-form message is saved in the `contact_messages` table of the D1 database `hajjumra`, and also forwarded to `CONTACT_WEBHOOK_URL` if set. If neither is available the form returns 503. Wrangler commands:
 
 ```bash
-npm run db:migrate   # create/upgrade tables (migrations/); needs CLOUDFLARE_API_TOKEN in the shell or .env
+npm run db:migrate   # create/upgrade tables (migrations/); after `npx wrangler login`
 npm run messages     # print the 50 latest messages
 ```
 
@@ -100,4 +97,4 @@ The 504 files in `public/uploads` are also in the R2 bucket `hajjumra` under `up
 ## Routes
 
 `/`, `/[category]`, `/[category]/page/[n]`, `/[category]/[slug]`, `/tag/[slug]`, `/author/[slug]`, `/video/[slug]`, `/videos`, `/search`, `/about`, `/contact`, `/privacy-policy`, `/admin`, `/sitemap.xml`, `/robots.txt`, `/api/contact`, `/api/admin/*`.
-Old WordPress category URLs (`/category/<cat>`) and the video-plugin utility pages 308-redirect to the new ones (see `next.config.ts`). Post, tag and author URLs are unchanged from WordPress.
+Old WordPress category URLs (`/category/<cat>`) and the video-plugin utility pages 308-redirect to the new ones (see `public/_redirects`). Post, tag and author URLs are unchanged from WordPress.

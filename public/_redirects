@@ -1,0 +1,11 @@
+# WordPress served categories at /category/<cat>/; post, tag and author URLs are unchanged.
+/category/:cat/page/:n /:cat/page/:n 308
+/category/:cat /:cat 308
+# video-plugin utility pages on the old site; no content of their own
+/video /videos 308
+/player-embed /videos 308
+/user-videos /videos 308
+/search-videos /videos 308
+/video-tag /videos 308
+/video-category /videos 308
+/4177-2 /videos 308

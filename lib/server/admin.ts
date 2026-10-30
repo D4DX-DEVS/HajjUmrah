@@ -11,7 +11,7 @@ const SESSION_SECONDS = 12 * 3600;
 const MAX_FAILS_PER_IP = 5;
 const MAX_FAILS_TOTAL = 60;
 const WINDOW_SECONDS = 900;
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // Vercel Functions reject request bodies over 4.5 MB
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // keeps uploads small; the Worker accepts far more
 
 const enc = new TextEncoder();
 const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
@@ -44,8 +44,8 @@ async function hasSession(req: Request) {
   return safeEqual(enc.encode(sig), enc.encode(await hmacHex(password, `session:${exp}`)));
 }
 const cookie = (value: string, maxAge: number) => `admin_session=${value}; Max-Age=${maxAge}; Path=/api/admin; HttpOnly; Secure; SameSite=Strict`;
-// Vercel puts the client address first in x-forwarded-for
-const clientIp = (req: Request) => (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown";
+// Cloudflare sets cf-connecting-ip itself; clients cannot spoof it
+const clientIp = (req: Request) => req.headers.get("cf-connecting-ip") ?? "unknown";
 
 async function login(req: Request) {
   const password = process.env.ADMIN_PASSWORD;

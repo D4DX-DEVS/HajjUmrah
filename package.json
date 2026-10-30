@@ -5,13 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "preview": "next build && wrangler dev",
+    "deploy": "next build && wrangler deploy",
     "lint": "eslint",
     "db:migrate": "wrangler d1 migrations apply hajjumra --remote",
     "messages": "wrangler d1 execute hajjumra --remote --command \"SELECT id, created_at, name, email, message FROM contact_messages ORDER BY id DESC LIMIT 50\""
   },
   "dependencies": {
-    "aws4fetch": "^1.0.20",
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0"

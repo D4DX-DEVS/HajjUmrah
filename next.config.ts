@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Pages are prerendered at build time; only /api/* runs as Vercel Functions.
+  // Plain HTML in ./out, served by Cloudflare static assets (free, no Worker CPU).
+  // Redirects and headers live in public/_redirects and public/_headers; the APIs are worker/index.ts.
+  output: "export",
   images: { unoptimized: true },
   poweredByHeader: false,
   turbopack: {
@@ -11,33 +13,6 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
-  },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-        ],
-      },
-      // The *.vercel.app addresses duplicate the real domain (canonicals already point there); keep them out of search results.
-      { source: "/:path*", has: [{ type: "host", value: ".*\\.vercel\\.app" }], headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
-      // Uploaded images never change under the same name: cache them for a year.
-      { source: "/uploads/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
-      // Pages are static. The CDN keeps them until the next deploy (a deploy purges it); browsers reuse them for a minute.
-      { source: "/((?!api|_next|uploads).*)", headers: [{ key: "Cache-Control", value: "public, max-age=60, s-maxage=31536000, stale-while-revalidate=86400" }] },
-    ];
-  },
-  // WordPress served categories at /category/<cat>/; post, tag and author URLs are unchanged.
-  async redirects() {
-    return [
-      { source: "/category/:cat", destination: "/:cat", permanent: true },
-      { source: "/category/:cat/page/:n", destination: "/:cat/page/:n", permanent: true },
-      // video-plugin utility pages on the old site; no content of their own
-      { source: "/:p(video|player-embed|user-videos|search-videos|video-tag|video-category|4177-2)", destination: "/videos", permanent: true },
-    ];
   },
 };
 
