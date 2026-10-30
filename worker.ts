@@ -22,6 +22,7 @@ const TEXT = /^(text\/(html|plain|xml|x-component)|application\/(xml|rss\+xml))/
 type Env = {
   MEDIA: R2Bucket;
   ASSETS: Fetcher;
+  VERSION?: { timestamp: string };
   WORKER_SELF_REFERENCE?: Fetcher;
   SITE_URL: string;
   ADMIN_PASSWORD?: string;
@@ -35,7 +36,7 @@ async function purgedAt(env: Env, ctx: ExecutionContext): Promise<number> {
   const hit = await edge().match(k);
   if (hit) return Number(await hit.text());
   const obj = await env.MEDIA.get(PURGED);
-  const t = obj ? Number(await obj.text()) : 0;
+  const t = Math.max(obj ? Number(await obj.text()) : 0, Date.parse(env.VERSION?.timestamp ?? "") || 0);
   ctx.waitUntil(edge().put(k, new Response(String(t), { headers: { "cache-control": "public, max-age=30" } })));
   return t;
 }

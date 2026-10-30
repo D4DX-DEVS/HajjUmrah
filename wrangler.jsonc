@@ -24,6 +24,8 @@
       "migrations_dir": "migrations"
     }
   ],
+  // deploy time: a new deploy counts as a purge (worker.ts), so stored pages never name CSS/font files of an old build
+  "version_metadata": { "binding": "VERSION" },
   // fills the page cache: renders a few pages nobody has visited yet on every run
   "triggers": { "crons": ["*/5 * * * *"] }
 }

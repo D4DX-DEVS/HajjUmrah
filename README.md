@@ -8,7 +8,7 @@ Next.js 16 copy of the WordPress site, running on **Cloudflare Workers** (OpenNe
 npm run db:seed:local   # once: fill the local D1 copy from content/*.json (after `npx wrangler d1 migrations apply hajjumra --local`)
 npm run dev             # dev server on the local D1/R2 copy, never the live data
 npm run preview         # build with OpenNext and run it like production
-npm run deploy          # build, deploy, then clear the page cache
+npm run deploy          # build and deploy (a new deploy also clears the page cache)
 ```
 
 `.dev.vars` (git-ignored) holds `ADMIN_PASSWORD=...` for local work.
@@ -35,7 +35,7 @@ D1's free tier allows 5M row reads a day, and an uncached page reads a few hundr
 - A stored page stays valid until the next change in the admin (every save, create or delete writes `cache/purged`; the editing location sees it at once, the others within 30 seconds) or 7 days. A Cron Trigger (every 5 minutes) also renders up to 5 pages per run that are not stored yet, so nearly every page is stored before anyone visits it.
 - Never stored: `/admin`, `/api/*`, form posts, search, anything with a cookie. If D1 fails while a page renders, the old stored copy is served.
 - The free plan cuts a request off at 10 ms of CPU and a fresh render can exceed it, so a render runs in a separate internal call (the Worker calling itself through `WORKER_SELF_REFERENCE`, marked with a key derived from `ADMIN_PASSWORD`) that is retried up to 3 times. Do not crawl the whole site quickly; Workers Paid ($5/month) removes the cut-off.
-- `npm run deploy` clears the cache at the end (stored pages name the CSS and font files of the build that rendered them).
+- A new deploy counts as a purge (the Worker compares stored pages with its own deploy time through the `VERSION` binding), because stored pages name the CSS and font files of the build that rendered them.
 - Clear it by hand: `npx wrangler r2 object put hajjumra/cache/purged --remote --pipe < <(date +%s%3N)` (any newer timestamp works).
 - Any address other than `SITE_URL` that reaches the Worker (workers.dev, a staging name) answers `robots.txt` with "disallow all" and marks pages `noindex`. A forwarding Worker in front of the domain must send `x-forwarded-host` with the public host.
 
